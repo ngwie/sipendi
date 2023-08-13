@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sipendi/src/app.dart';
 import 'package:sipendi/src/app_config.dart';
-import 'package:sipendi/src/models/userAuth.dart';
+import 'package:sipendi/src/models/user_auth.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {

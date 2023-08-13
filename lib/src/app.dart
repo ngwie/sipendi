@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:sipendi/src/models/user_auth.dart';
 import 'package:sipendi/src/screens/home.dart';
 import 'package:sipendi/src/screens/sign_in.dart';
 import 'package:sipendi/src/screens/sign_up.dart';
-
-import 'models/userAuth.dart';
 
 final _router = GoRouter(
     redirect: (context, state) {
