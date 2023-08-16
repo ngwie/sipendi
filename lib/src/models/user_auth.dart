@@ -14,9 +14,8 @@ class UserAuthModel extends ChangeNotifier {
 
   bool get signedIn => session != null;
 
-  Future<void> signIn(String phone, String password) async {
-    await _supabase.auth.signInWithPassword(phone: phone, password: password);
-    final data = await _supabase.from('user').select().eq('id', user!.id);
+  Future<void> _assignUserDetail({dynamic data}) async {
+    data ??= await _supabase.from('user').select().eq('id', user!.id);
 
     _userDetail = UserDetail(
         id: data[0]['id'],
@@ -26,6 +25,15 @@ class UserAuthModel extends ChangeNotifier {
         address: data[0]['address']);
 
     notifyListeners();
+  }
+
+  UserAuthModel() {
+    if (signedIn) _assignUserDetail();
+  }
+
+  Future<void> signIn(String phone, String password) async {
+    await _supabase.auth.signInWithPassword(phone: phone, password: password);
+    await _assignUserDetail();
   }
 
   Future<void> signOut() async {
@@ -63,13 +71,6 @@ class UserAuthModel extends ChangeNotifier {
       'created_at': 'now()',
     });
 
-    _userDetail = UserDetail(
-        id: data[0]['id'],
-        fullName: data[0]['full_name'],
-        phone: data[0]['phone'],
-        birthDate: DateTime.parse(data[0]['birth_date']),
-        address: data[0]['address']);
-
-    notifyListeners();
+    await _assignUserDetail(data: data);
   }
 }

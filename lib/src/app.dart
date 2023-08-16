@@ -27,7 +27,7 @@ final _router = GoRouter(
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => const HomeScreen(title: 'SiPendDi'),
+        builder: (context, state) => const HomeScreen(),
       ),
       GoRoute(
         path: '/login',
@@ -46,10 +46,15 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: _router,
-      // theme: ThemeData(
-      //   useMaterial3: true,
-      //   colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF75B79E)),
-      // ),
+      theme: ThemeData(
+        textTheme: const TextTheme(
+          displayLarge: TextStyle(
+            fontSize: 22.0,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF75B79E),
+          ),
+        ),
+      ),
     );
   }
 }
