@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:sipendi/src/models/user_auth.dart';
 import 'package:sipendi/src/screens/home.dart';
+import 'package:sipendi/src/screens/medicine.dart';
 import 'package:sipendi/src/screens/sign_in.dart';
 import 'package:sipendi/src/screens/sign_up.dart';
 
@@ -37,6 +38,10 @@ final _router = GoRouter(
         path: '/register',
         builder: (context, state) => const SignUpScreen(),
       ),
+      GoRoute(
+        path: '/medicine',
+        builder: (context, state) => const MedicineScreen(),
+      )
     ]);
 
 class App extends StatelessWidget {

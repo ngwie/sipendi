@@ -60,15 +60,11 @@ class UserAuthModel extends ChangeNotifier {
       'gender': gender,
       'birth_date': DateFormat('dd-MM-yyyy').parse(birthDate).toIso8601String(),
       'address': address,
-      'created_by': user!.id,
-      'created_at': 'now()',
     }).select();
     await _supabase.from('medical_record').insert({
       'user_id': user!.id,
       'type': 'body_height',
       'value': bodyHeight,
-      'created_by': user!.id,
-      'created_at': 'now()',
     });
 
     await _assignUserDetail(data: data);

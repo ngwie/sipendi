@@ -12,6 +12,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -42,7 +43,6 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(width: 12)
         ],
       ),
-      extendBodyBehindAppBar: true,
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 28.0),
@@ -90,13 +90,18 @@ class HomeScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     _menuItem(
+                      context,
                       title: 'Rekam Data',
                       iconPath: 'assets/icon/list_alt.svg',
+                      to: '/',
                     ),
                     const SizedBox(width: 50),
                     _menuItem(
-                        title: 'Pengingat',
-                        iconPath: 'assets/icon/reminder.svg'),
+                      context,
+                      title: 'Pengingat',
+                      iconPath: 'assets/icon/reminder.svg',
+                      to: '/',
+                    ),
                   ],
                 ),
               ),
@@ -105,13 +110,18 @@ class HomeScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     _menuItem(
+                      context,
                       title: 'Daftar Obat',
                       iconPath: 'assets/icon/meds.svg',
+                      to: '/medicine',
                     ),
                     const SizedBox(width: 50),
                     _menuItem(
-                        title: 'Keluhan Obat',
-                        iconPath: 'assets/icon/side_effect.svg'),
+                      context,
+                      title: 'Keluhan Obat',
+                      iconPath: 'assets/icon/side_effect.svg',
+                      to: '/',
+                    ),
                   ],
                 ),
               )
@@ -122,27 +132,19 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _menuItem({required String title, required String iconPath}) {
+  Widget _menuItem(BuildContext context,
+      {required String title, required String iconPath, required String to}) {
     return Expanded(
       child: Column(
         children: [
-          Center(
-            child: Container(
-              width: 90,
-              height: 90,
-              decoration: BoxDecoration(
-                color: const Color(0xFF75B79E),
-                borderRadius: BorderRadius.circular(45),
-              ),
-              child: Material(
-                type: MaterialType.transparency,
-                clipBehavior: Clip.hardEdge,
-                child: IconButton(
-                  icon: SvgPicture.asset(iconPath, semanticsLabel: title),
-                  onPressed: () {},
-                ),
-              ),
+          ElevatedButton(
+            onPressed: () => context.push(to),
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+              padding: const EdgeInsets.all(22.5),
+              backgroundColor: const Color(0xFF75B79E),
             ),
+            child: SvgPicture.asset(iconPath, semanticsLabel: title),
           ),
           const SizedBox(height: 8),
           Text(
