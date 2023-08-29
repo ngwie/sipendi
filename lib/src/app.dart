@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:sipendi/src/models/user_auth.dart';
 import 'package:sipendi/src/screens/home.dart';
 import 'package:sipendi/src/screens/medicine.dart';
+import 'package:sipendi/src/screens/medicine_add.dart';
+import 'package:sipendi/src/screens/medicine_detail.dart';
 import 'package:sipendi/src/screens/sign_in.dart';
 import 'package:sipendi/src/screens/sign_up.dart';
 
@@ -29,6 +31,23 @@ final _router = GoRouter(
       GoRoute(
         path: '/',
         builder: (context, state) => const HomeScreen(),
+        routes: [
+          GoRoute(
+            path: 'medicine',
+            builder: (context, state) => const MedicineScreen(),
+            routes: [
+              GoRoute(
+                path: 'add',
+                builder: (context, state) => const MedicineAddScreen(),
+              ),
+              GoRoute(
+                path: ':id',
+                builder: (context, state) =>
+                    MedicineDetailScreen(id: state.pathParameters['id']),
+              ),
+            ],
+          ),
+        ],
       ),
       GoRoute(
         path: '/login',
@@ -38,10 +57,6 @@ final _router = GoRouter(
         path: '/register',
         builder: (context, state) => const SignUpScreen(),
       ),
-      GoRoute(
-        path: '/medicine',
-        builder: (context, state) => const MedicineScreen(),
-      )
     ]);
 
 class App extends StatelessWidget {

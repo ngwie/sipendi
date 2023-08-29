@@ -22,8 +22,10 @@ class _MedicineScreenState extends State<MedicineScreen> {
 
   Future<void> _getUserMedicine(BuildContext context) async {
     try {
-      var response =
-          await _supabase.from('patient_medicine').select('id, medicine(name)');
+      var response = await _supabase
+          .from('patient_medicine')
+          .select('id, medicine(name)')
+          .eq('active', true);
 
       setState(() {
         _medicines = response;
@@ -50,34 +52,18 @@ class _MedicineScreenState extends State<MedicineScreen> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 28.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icon/meds.svg',
-                        width: 38,
-                        colorFilter: const ColorFilter.mode(
-                          Color(0xFF75B79E),
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                      const SizedBox(width: 18),
-                      const Text(
-                        'Daftar Obat',
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF6A8CAF),
-                        ),
-                      ),
-                    ],
+                const Text(
+                  'Daftar Obat',
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF6A8CAF),
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 32),
                   child: Column(
                     children: _medicineList(context, medicines: _medicines),
                   ),
@@ -88,7 +74,12 @@ class _MedicineScreenState extends State<MedicineScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          final bool? value = await context.push('/medicine/add');
+          if ((value ?? false) && context.mounted) {
+            _getUserMedicine(context);
+          }
+        },
         tooltip: 'Tambah Obat',
         backgroundColor: const Color(0xFF75B79E),
         child: const Icon(
@@ -117,7 +108,12 @@ class _MedicineScreenState extends State<MedicineScreen> {
   Widget _medicineItem(BuildContext context,
       {required int id, required String medicineName}) {
     return ElevatedButton(
-      onPressed: () => context.push('/medicine/${id.toString()}'),
+      onPressed: () async {
+        final bool? value = await context.push('/medicine/${id.toString()}');
+        if ((value ?? false) && context.mounted) {
+          _getUserMedicine(context);
+        }
+      },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF75B79E),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 18),
