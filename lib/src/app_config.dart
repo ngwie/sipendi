@@ -21,7 +21,8 @@ class AppConfig {
 
     // convert our JSON into an instance of our AppConfig class
     return AppConfig(
-        supabaseUrl: json['supabase']['url'],
-        supabaseAnonKey: json['supabase']['anonKey']);
+      supabaseUrl: json['supabase']['url'],
+      supabaseAnonKey: json['supabase']['anonKey'],
+    );
   }
 }

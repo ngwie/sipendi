@@ -2,14 +2,9 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:sipendi/src/models/medicine_search_model.dart';
+import 'package:sipendi/src/models/medicine_model.dart';
 import 'package:sipendi/src/utils/string_validation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-const List<Map<String, String>> _genderList = [
-  {'label': 'Laki-Laki', 'value': 'male'},
-  {'label': 'Perempuan', 'value': 'female'},
-];
 
 const List<Map<String, String>> _consumptionRuleList = [
   {'label': 'Sebelum Makan', 'value': 'before_meal'},
@@ -38,10 +33,10 @@ class MedicineAddScreen extends StatefulWidget {
   const MedicineAddScreen({super.key});
 
   @override
-  State<MedicineAddScreen> createState() => _MedicineAddState();
+  State<MedicineAddScreen> createState() => _MedicineAddScreenState();
 }
 
-class _MedicineAddState extends State<MedicineAddScreen> {
+class _MedicineAddScreenState extends State<MedicineAddScreen> {
   final _supabase = Supabase.instance.client;
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
@@ -101,15 +96,19 @@ class _MedicineAddState extends State<MedicineAddScreen> {
         context.pop(true);
       }
     } on AuthException catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(error.message),
-        behavior: SnackBarBehavior.floating,
-      ));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(error.message),
+          behavior: SnackBarBehavior.floating,
+        ));
+      }
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Unexpected error occurred'),
-        behavior: SnackBarBehavior.floating,
-      ));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Unexpected error occurred'),
+          behavior: SnackBarBehavior.floating,
+        ));
+      }
     }
 
     setState(() {

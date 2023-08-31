@@ -31,10 +31,12 @@ class _MedicineScreenState extends State<MedicineScreen> {
         _medicines = response;
       });
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Unexpected error occurred'),
-        behavior: SnackBarBehavior.floating,
-      ));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Unexpected error occurred'),
+          behavior: SnackBarBehavior.floating,
+        ));
+      }
     }
   }
 

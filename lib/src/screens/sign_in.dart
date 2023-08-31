@@ -113,17 +113,21 @@ class _SignInScreenState extends State<SignInScreen> {
                                 context.pushReplacement('/');
                               }
                             } on AuthException catch (error) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(error.message),
-                                behavior: SnackBarBehavior.floating,
-                              ));
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text(error.message),
+                                  behavior: SnackBarBehavior.floating,
+                                ));
+                              }
                             } catch (error) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                content: Text('Unexpected error occurred'),
-                                behavior: SnackBarBehavior.floating,
-                              ));
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                  content: Text('Unexpected error occurred'),
+                                  behavior: SnackBarBehavior.floating,
+                                ));
+                              }
                             }
 
                             setState(() {

@@ -36,10 +36,12 @@ class _MedicineDetailState extends State<MedicineDetailScreen> {
         _userMedicine = response;
       });
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Unexpected error occurred'),
-        behavior: SnackBarBehavior.floating,
-      ));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Unexpected error occurred'),
+          behavior: SnackBarBehavior.floating,
+        ));
+      }
     }
   }
 
@@ -58,10 +60,12 @@ class _MedicineDetailState extends State<MedicineDetailScreen> {
         context.pop(true);
       }
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Fail to remove medicine'),
-        behavior: SnackBarBehavior.floating,
-      ));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Fail to remove medicine'),
+          behavior: SnackBarBehavior.floating,
+        ));
+      }
     }
   }
 
@@ -218,7 +222,7 @@ class _MedicineDetailState extends State<MedicineDetailScreen> {
     );
 
     Widget confirmButton = TextButton(
-      child: Text('Iya, Saya yakin'),
+      child: const Text('Iya, Saya yakin'),
       onPressed: () => _deactivateUserMedicine(context),
     );
 
