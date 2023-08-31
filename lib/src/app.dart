@@ -6,6 +6,7 @@ import 'package:sipendi/src/screens/home.dart';
 import 'package:sipendi/src/screens/medicine.dart';
 import 'package:sipendi/src/screens/medicine_add.dart';
 import 'package:sipendi/src/screens/medicine_detail.dart';
+import 'package:sipendi/src/screens/reminder.dart';
 import 'package:sipendi/src/screens/sign_in.dart';
 import 'package:sipendi/src/screens/sign_up.dart';
 
@@ -47,6 +48,10 @@ final _router = GoRouter(
               ),
             ],
           ),
+          GoRoute(
+            path: 'reminder',
+            builder: (context, state) => const ReminderScreen(),
+          )
         ],
       ),
       GoRoute(

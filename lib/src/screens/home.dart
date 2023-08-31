@@ -100,7 +100,7 @@ class HomeScreen extends StatelessWidget {
                       context,
                       title: 'Pengingat',
                       iconPath: 'assets/icon/reminder.svg',
-                      to: '/',
+                      to: '/reminder',
                     ),
                   ],
                 ),
