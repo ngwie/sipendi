@@ -1,24 +1,27 @@
-class MedicineSearchModel {
+class MedicineModel {
   final int id;
   final String name;
+  final String? descriptions;
 
-  MedicineSearchModel({
+  MedicineModel({
     required this.id,
     required this.name,
+    this.descriptions,
   });
 
-  factory MedicineSearchModel.formHash(Map<String, dynamic> data) {
-    return MedicineSearchModel(
+  factory MedicineModel.formHash(Map<String, dynamic> data) {
+    return MedicineModel(
       id: data['id'],
       name: data['name'],
+      descriptions: data['descriptions'],
     );
   }
 
-  static List<MedicineSearchModel> fromHashList(List list) {
-    return list.map((item) => MedicineSearchModel.formHash(item)).toList();
+  static List<MedicineModel> fromHashList(List list) {
+    return list.map((item) => MedicineModel.formHash(item)).toList();
   }
 
-  bool isEqual(MedicineSearchModel model) {
+  bool isEqual(MedicineModel model) {
     return id == model.id;
   }
 

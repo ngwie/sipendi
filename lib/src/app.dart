@@ -44,7 +44,7 @@ final _router = GoRouter(
               GoRoute(
                 path: ':id',
                 builder: (context, state) =>
-                    MedicineDetailScreen(id: state.pathParameters['id']),
+                    MedicineDetailScreen(id: state.pathParameters['id']!),
               ),
             ],
           ),

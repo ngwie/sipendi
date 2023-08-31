@@ -48,14 +48,14 @@ class _MedicineAddScreenState extends State<MedicineAddScreen> {
   final _recurrenceTypeController = TextEditingController();
   final _startDateController = TextEditingController();
 
-  Future<List<MedicineSearchModel>> _searchMed(String filter) async {
+  Future<List<MedicineModel>> _searchMed(String filter) async {
     try {
       final List response = await _supabase
           .from('medicine')
           .select('id, name')
           .ilike('name', '%$filter%')
           .limit(10);
-      return MedicineSearchModel.fromHashList(response);
+      return MedicineModel.fromHashList(response);
     } catch (error) {
       return [];
     }
@@ -143,7 +143,7 @@ class _MedicineAddScreenState extends State<MedicineAddScreen> {
                     ),
                   ),
                   const SizedBox(height: 18),
-                  DropdownSearch<MedicineSearchModel>(
+                  DropdownSearch<MedicineModel>(
                     asyncItems: (String filter) => _searchMed(filter),
                     popupProps: PopupProps.menu(
                       showSelectedItems: true,

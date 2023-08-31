@@ -1,72 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sipendi/src/models/user_medicine_model.dart';
 import 'package:sipendi/src/utils/string_med.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class MedicineDetailScreen extends StatefulWidget {
-  final String? id;
-
-  const MedicineDetailScreen({super.key, required this.id});
-
-  @override
-  State<MedicineDetailScreen> createState() => _MedicineDetailState();
-}
-
-class _MedicineDetailState extends State<MedicineDetailScreen> {
+class MedicineDetailScreen extends StatelessWidget {
   final _supabase = Supabase.instance.client;
-  Map? _userMedicine;
 
-  @override
-  void initState() {
-    super.initState();
-    _getUserMedicineDetail(context);
+  final String id;
+
+  MedicineDetailScreen({super.key, required this.id});
+
+  Future<UserMedicineModel> _getUserMedicineDetail() async {
+    final response = await _supabase
+        .from('patient_medicine')
+        .select('*, medicine(*)')
+        .eq('id', id)
+        .single();
+
+    return UserMedicineModel.formHash(response);
   }
 
-  Future<void> _getUserMedicineDetail(BuildContext context) async {
-    try {
-      if (widget.id == null) return;
-
-      var response = await _supabase
-          .from('patient_medicine')
-          .select('*, medicine(*)')
-          .eq('id', widget.id)
-          .single();
-
-      setState(() {
-        _userMedicine = response;
-      });
-    } catch (error) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Unexpected error occurred'),
-          behavior: SnackBarBehavior.floating,
-        ));
-      }
-    }
-  }
-
-  Future<void> _deactivateUserMedicine(BuildContext context) async {
-    try {
-      if (widget.id == null) return;
-
-      await _supabase.from('patient_medicine').update({
-        'active': false,
-        'updated_at': 'now()',
-        'updated_by': _supabase.auth.currentUser?.id,
-      }).eq('id', widget.id);
-
-      if (context.mounted) {
-        Navigator.pop(context);
-        context.pop(true);
-      }
-    } catch (error) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Fail to remove medicine'),
-          behavior: SnackBarBehavior.floating,
-        ));
-      }
-    }
+  Future<void> _deactivateUserMedicine() {
+    return _supabase.from('patient_medicine').update({
+      'active': false,
+      'updated_at': 'now()',
+      'updated_by': _supabase.auth.currentUser?.id,
+    }).eq('id', id);
   }
 
   @override
@@ -90,85 +50,120 @@ class _MedicineDetailState extends State<MedicineDetailScreen> {
         child: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 28.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _userMedicine?['medicine']['name'] ?? '',
-                  style: const TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF6A8CAF),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  StringMed.consumptionRuleText(
-                      rule: _userMedicine?['consumption_rule']),
-                  style: const TextStyle(
-                    fontSize: 24,
-                    color: Color(0xFF75B79E),
-                  ),
-                ),
-                const SizedBox(height: 1),
-                Row(
-                  children: [
-                    const Text(
-                      'Mulai Pemakain: ',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF75B79E),
-                      ),
+            child: FutureBuilder<dynamic>(
+              future: _getUserMedicineDetail(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const Center(
+                    heightFactor: 8,
+                    child: CircularProgressIndicator(
+                      color: Color(0xFF75B79E),
                     ),
-                    Text(
-                      _userMedicine?['start_date'] ?? '',
-                      style: const TextStyle(
-                        color: Color(0xFF75B79E),
-                      ),
+                  );
+                }
+
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Text(
+                      'Unexpected error occurred',
+                      style: TextStyle(fontSize: 18),
                     ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 32),
-                  child: Row(
-                    children: [
-                      _doseCard(
-                        label: 'Dosis',
-                        text: StringMed.doseText(
-                          dose: _userMedicine?['dose'],
-                          doseUnit: _userMedicine?['dose_unit'],
-                        ),
-                      ),
-                      const SizedBox(width: 18),
-                      _doseCard(
-                          label: 'Frekuensi',
-                          text: StringMed.doseFrequencyText(
-                            freq: _userMedicine?['recurrence_frequency'],
-                            type: _userMedicine?['recurrence_type'],
-                          )),
-                    ],
+                  );
+                }
+
+                if (snapshot.hasData) {
+                  return _userMedicineDetail(snapshot.data);
+                }
+
+                return const Center(
+                  child: Text(
+                    'Data tidak ditemukan',
+                    style: TextStyle(fontSize: 18),
                   ),
-                ),
-                const Text(
-                  'Deskripsi:',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF6A8CAF),
-                  ),
-                ),
-                const SizedBox(height: 1),
-                Text(
-                  _userMedicine?['medicine']['descriptions'] ?? '',
-                  style: const TextStyle(
-                    color: Color(0xFF6A8CAF),
-                  ),
-                ),
-              ],
+                );
+              },
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _userMedicineDetail(UserMedicineModel userMedicine) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          userMedicine.medicine.name,
+          style: const TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF6A8CAF),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          StringMed.consumptionRuleText(rule: userMedicine.consumptionRule),
+          style: const TextStyle(
+            fontSize: 24,
+            color: Color(0xFF75B79E),
+          ),
+        ),
+        const SizedBox(height: 1),
+        Row(
+          children: [
+            const Text(
+              'Mulai Pemakain: ',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF75B79E),
+              ),
+            ),
+            Text(
+              userMedicine.startDate,
+              style: const TextStyle(
+                color: Color(0xFF75B79E),
+              ),
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 32),
+          child: Row(
+            children: [
+              _doseCard(
+                label: 'Dosis',
+                text: StringMed.doseText(
+                  dose: userMedicine.dose,
+                  doseUnit: userMedicine.doseUnit,
+                ),
+              ),
+              const SizedBox(width: 18),
+              _doseCard(
+                  label: 'Frekuensi',
+                  text: StringMed.doseFrequencyText(
+                    freq: userMedicine.recurrenceFrequency,
+                    type: userMedicine.recurrenceType,
+                  )),
+            ],
+          ),
+        ),
+        const Text(
+          'Deskripsi:',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF6A8CAF),
+          ),
+        ),
+        const SizedBox(height: 1),
+        Text(
+          userMedicine.medicine.descriptions ?? '',
+          style: const TextStyle(
+            color: Color(0xFF6A8CAF),
+          ),
+        ),
+      ],
     );
   }
 
@@ -223,7 +218,23 @@ class _MedicineDetailState extends State<MedicineDetailScreen> {
 
     Widget confirmButton = TextButton(
       child: const Text('Iya, Saya yakin'),
-      onPressed: () => _deactivateUserMedicine(context),
+      onPressed: () async {
+        try {
+          await _deactivateUserMedicine();
+
+          if (context.mounted) {
+            Navigator.pop(context);
+            context.pop(true);
+          }
+        } catch (error) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text('Gagal menghapus obat'),
+              behavior: SnackBarBehavior.floating,
+            ));
+          }
+        }
+      },
     );
 
     AlertDialog removeConfirmationAlert = AlertDialog(
@@ -235,7 +246,6 @@ class _MedicineDetailState extends State<MedicineDetailScreen> {
       ],
     );
 
-    // show the dialog
     showDialog(
       context: context,
       barrierDismissible: false,
