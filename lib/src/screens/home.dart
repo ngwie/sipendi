@@ -12,17 +12,14 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
         actions: [
           Consumer<UserAuthModel>(builder: (context, model, child) {
             return PopupMenuButton<ProfileMenuItem>(
               iconSize: 36,
-              icon: const Icon(
+              icon: Icon(
                 Icons.account_circle,
-                color: Color(0xFF6A8CAF),
+                color: Theme.of(context).colorScheme.secondary,
               ),
               onSelected: (ProfileMenuItem item) async {
                 await model.signOut();
@@ -74,13 +71,9 @@ class HomeScreen extends StatelessWidget {
                         },
                       ),
                     ]),
-                    const Text(
+                    Text(
                       'Beranda',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF6A8CAF),
-                      ),
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ],
                 ),
@@ -93,7 +86,6 @@ class HomeScreen extends StatelessWidget {
                       context,
                       title: 'Rekam Data',
                       iconPath: 'assets/icon/list_alt.svg',
-                      to: '/',
                     ),
                     const SizedBox(width: 50),
                     _menuItem(
@@ -120,7 +112,6 @@ class HomeScreen extends StatelessWidget {
                       context,
                       title: 'Keluhan Obat',
                       iconPath: 'assets/icon/side_effect.svg',
-                      to: '/',
                     ),
                   ],
                 ),
@@ -133,26 +124,27 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _menuItem(BuildContext context,
-      {required String title, required String iconPath, required String to}) {
+      {required String title, required String iconPath, String? to}) {
     return Expanded(
       child: Column(
         children: [
           ElevatedButton(
-            onPressed: () => context.push(to),
+            onPressed: () {
+              if (to != null) context.push(to);
+            },
             style: ElevatedButton.styleFrom(
               shape: const CircleBorder(),
               padding: const EdgeInsets.all(22.5),
-              backgroundColor: const Color(0xFF75B79E),
             ),
             child: SvgPicture.asset(iconPath, semanticsLabel: title),
           ),
           const SizedBox(height: 8),
           Text(
             title,
-            style: const TextStyle(
-              color: Color(0xFF6A8CAF),
-              fontWeight: FontWeight.w500,
+            style: TextStyle(
               fontSize: 22,
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
         ],

@@ -9,6 +9,7 @@ import 'package:sipendi/src/screens/medicine_detail.dart';
 import 'package:sipendi/src/screens/reminder.dart';
 import 'package:sipendi/src/screens/sign_in.dart';
 import 'package:sipendi/src/screens/sign_up.dart';
+import 'package:sipendi/src/theme.dart';
 
 final _router = GoRouter(
     redirect: (context, state) {
@@ -51,7 +52,7 @@ final _router = GoRouter(
           GoRoute(
             path: 'reminder',
             builder: (context, state) => const ReminderScreen(),
-          )
+          ),
         ],
       ),
       GoRoute(
@@ -72,11 +73,31 @@ class App extends StatelessWidget {
     return MaterialApp.router(
       routerConfig: _router,
       theme: ThemeData(
+        colorScheme: const ColorScheme(
+          brightness: Brightness.light,
+          primary: ThemeColor.greenSheen,
+          onPrimary: ThemeColor.paleSpringBud,
+          secondary: ThemeColor.rackley,
+          onSecondary: ThemeColor.paleSpringBud,
+          error: ThemeColor.sunsetOrange,
+          onError: ThemeColor.paleSpringBud,
+          background: Colors.transparent,
+          onBackground: ThemeColor.greenSheen,
+          surface: Colors.transparent,
+          onSurface: ThemeColor.rackley,
+        ),
         textTheme: const TextTheme(
-          displayLarge: TextStyle(
-            fontSize: 22.0,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF75B79E),
+          titleLarge: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF6A8CAF),
+          ),
+        ),
+        appBarTheme: const AppBarTheme(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          iconTheme: IconThemeData(
+            color: ThemeColor.greenSheen,
           ),
         ),
       ),

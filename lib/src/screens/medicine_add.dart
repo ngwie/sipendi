@@ -119,12 +119,6 @@ class _MedicineAddScreenState extends State<MedicineAddScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        iconTheme: const IconThemeData(color: Color(0xFF75B79E)),
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -134,13 +128,9 @@ class _MedicineAddScreenState extends State<MedicineAddScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Tambah Obat',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF6A8CAF),
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 18),
                   DropdownSearch<MedicineModel>(
@@ -197,12 +187,12 @@ class _MedicineAddScreenState extends State<MedicineAddScreen> {
                     }).toList(),
                   ),
                   const SizedBox(height: 18),
-                  const Text(
+                  Text(
                     'Dosis',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF6A8CAF),
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                   const SizedBox(height: 18),
@@ -248,12 +238,12 @@ class _MedicineAddScreenState extends State<MedicineAddScreen> {
                     ],
                   ),
                   const SizedBox(height: 18),
-                  const Text(
+                  Text(
                     'Frekuensi',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF6A8CAF),
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                   const SizedBox(height: 18),

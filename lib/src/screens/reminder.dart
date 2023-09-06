@@ -47,12 +47,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        iconTheme: const IconThemeData(color: Color(0xFF75B79E)),
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -60,13 +54,9 @@ class _ReminderScreenState extends State<ReminderScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Pengingat',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF6A8CAF),
-                  ),
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 32),

@@ -32,11 +32,7 @@ class MedicineDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        iconTheme: const IconThemeData(color: Color(0xFF75B79E)),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),
@@ -72,7 +68,7 @@ class MedicineDetailScreen extends StatelessWidget {
                 }
 
                 if (snapshot.hasData) {
-                  return _userMedicineDetail(snapshot.data);
+                  return _userMedicineDetail(context, snapshot.data);
                 }
 
                 return const Center(
@@ -89,17 +85,14 @@ class MedicineDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _userMedicineDetail(UserMedicineModel userMedicine) {
+  Widget _userMedicineDetail(
+      BuildContext context, UserMedicineModel userMedicine) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           userMedicine.medicine.name,
-          style: const TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF6A8CAF),
-          ),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8),
         Text(
@@ -148,19 +141,19 @@ class MedicineDetailScreen extends StatelessWidget {
             ],
           ),
         ),
-        const Text(
+        Text(
           'Deskripsi:',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF6A8CAF),
+            color: Theme.of(context).colorScheme.secondary,
           ),
         ),
         const SizedBox(height: 1),
         Text(
           userMedicine.medicine.descriptions ?? '',
-          style: const TextStyle(
-            color: Color(0xFF6A8CAF),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.secondary,
           ),
         ),
       ],
