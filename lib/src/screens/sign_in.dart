@@ -98,11 +98,11 @@ class _SignInScreenState extends State<SignInScreen> {
                             if (_isLoading) return;
                             if (!_formKey.currentState!.validate()) return;
 
-                            try {
-                              setState(() {
-                                _isLoading = true;
-                              });
+                            setState(() {
+                              _isLoading = true;
+                            });
 
+                            try {
                               final phone = _phoneController.value.text
                                   .trim()
                                   .replaceFirst(RegExp(r'^0'), '62');
@@ -131,7 +131,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             }
 
                             setState(() {
-                              _isLoading = true;
+                              _isLoading = false;
                             });
                           },
                         );
@@ -144,10 +144,11 @@ class _SignInScreenState extends State<SignInScreen> {
                   children: [
                     const Text('Tidak punya akun?'),
                     TextButton(
-                        onPressed: () {
-                          context.pushReplacement('/register');
-                        },
-                        child: const Text('Daftar di sini'))
+                      child: const Text('Daftar di sini'),
+                      onPressed: () {
+                        context.pushReplacement('/register');
+                      },
+                    ),
                   ],
                 ),
               ],

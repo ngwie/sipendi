@@ -7,6 +7,7 @@ import 'package:sipendi/src/screens/medicine.dart';
 import 'package:sipendi/src/screens/medicine_add.dart';
 import 'package:sipendi/src/screens/medicine_detail.dart';
 import 'package:sipendi/src/screens/reminder.dart';
+import 'package:sipendi/src/screens/reminder_add.dart';
 import 'package:sipendi/src/screens/sign_in.dart';
 import 'package:sipendi/src/screens/sign_up.dart';
 import 'package:sipendi/src/theme.dart';
@@ -52,6 +53,12 @@ final _router = GoRouter(
           GoRoute(
             path: 'reminder',
             builder: (context, state) => const ReminderScreen(),
+            routes: [
+              GoRoute(
+                path: 'add',
+                builder: (context, state) => const ReminderAddScreen(),
+              )
+            ],
           ),
         ],
       ),
@@ -81,9 +88,9 @@ class App extends StatelessWidget {
           onSecondary: ThemeColor.paleSpringBud,
           error: ThemeColor.sunsetOrange,
           onError: ThemeColor.paleSpringBud,
-          background: Colors.transparent,
+          background: Colors.white,
           onBackground: ThemeColor.greenSheen,
-          surface: Colors.transparent,
+          surface: Colors.white,
           onSurface: ThemeColor.rackley,
         ),
         textTheme: const TextTheme(

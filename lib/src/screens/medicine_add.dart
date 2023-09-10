@@ -119,6 +119,7 @@ class _MedicineAddScreenState extends State<MedicineAddScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -217,6 +218,10 @@ class _MedicineAddScreenState extends State<MedicineAddScreen> {
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Satuan',
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 17.5,
+                              horizontal: 10,
+                            ),
                           ),
                           validator: (value) => StringValidation.isEmpty(value)
                               ? 'Satuan dosis pakai tidak boleh kosong'
@@ -267,7 +272,11 @@ class _MedicineAddScreenState extends State<MedicineAddScreen> {
                         child: DropdownButtonFormField<String>(
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText: 'Jam/Hari/Minggu',
+                            labelText: 'Jam/Hari',
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 17.5,
+                              horizontal: 10,
+                            ),
                           ),
                           validator: (value) => StringValidation.isEmpty(value)
                               ? 'Satuan frekuesi tidak boleh kosong'

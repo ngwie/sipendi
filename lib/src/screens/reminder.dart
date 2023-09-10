@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sipendi/src/models/reminder_model.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sipendi/src/utils/sqlite_db.dart';
 
-const classAssetMap = {
+const contextAssetMap = {
   'taking_medicine': 'assets/icon/meds.svg',
   'medical_record': 'assets/icon/list_alt.svg',
 };
@@ -17,7 +17,6 @@ class ReminderScreen extends StatefulWidget {
 }
 
 class _ReminderScreenState extends State<ReminderScreen> {
-  final _supabase = Supabase.instance.client;
   List<ReminderModel>? _reminders;
 
   @override
@@ -28,11 +27,18 @@ class _ReminderScreenState extends State<ReminderScreen> {
 
   Future<void> _getUserReminder(BuildContext context) async {
     try {
-      final response =
-          await _supabase.from('reminder').select('*, reminder_time(*)');
+      final reminders = await SqliteDb.client.query('reminder');
+      final reminderTimes = await SqliteDb.client.query('reminder_time');
+
+      final List<dynamic> res = reminders.map((reminder) {
+        final times = reminderTimes
+            .where((time) => time['reminder_id'] == reminder['id'])
+            .toList();
+        return {...reminder, 'time_list': times};
+      }).toList();
 
       setState(() {
-        _reminders = ReminderModel.fromHashList(response);
+        _reminders = ReminderModel.fromHashList(res);
       });
     } catch (error) {
       if (context.mounted) {
@@ -47,6 +53,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -120,17 +127,30 @@ class _ReminderScreenState extends State<ReminderScreen> {
       child: Row(
         children: [
           SvgPicture.asset(
-            classAssetMap[reminder.className] ?? 'assets/icon/meds.svg',
+            contextAssetMap[reminder.context] ?? 'assets/icon/meds.svg',
             width: 38,
           ),
           const SizedBox(width: 18),
-          Text(
-            reminder.classContext ?? 'Pengingat',
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w500,
-              color: Color(0xFFEEF9BF),
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                reminder.referenceName ?? 'Pengingat',
+                style: const TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFFEEF9BF),
+                ),
+              ),
+              Text(
+                reminder.times
+                    .map((reminderTime) => reminderTime.time.format(context))
+                    .join(', '),
+                style: const TextStyle(
+                  color: Color(0xFFEEF9BF),
+                ),
+              ),
+            ],
           ),
         ],
       ),

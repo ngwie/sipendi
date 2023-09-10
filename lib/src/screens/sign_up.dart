@@ -136,6 +136,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Jenis Kelamin',
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 17.5,
+                            horizontal: 10,
+                          ),
                         ),
                         validator: (value) => StringValidation.isEmpty(value)
                             ? 'Jenis kelamin tidak boleh kosong'
@@ -255,10 +259,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       const Text('Sudah punya akun'),
                       TextButton(
-                          onPressed: () {
-                            context.pushReplacement('/login');
-                          },
-                          child: const Text('Masuk di sini'))
+                        child: const Text('Masuk di sini'),
+                        onPressed: () {
+                          context.pushReplacement('/login');
+                        },
+                      ),
                     ],
                   ),
                 ],
