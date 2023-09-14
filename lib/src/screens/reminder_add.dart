@@ -127,7 +127,7 @@ class _ReminderAddScreenState extends State<ReminderAddScreen> {
       String body = '';
 
       if (reminder.context == 'taking_medicine') {
-        title = 'Pengigat Obat';
+        title = 'Pengingat Obat';
         body = 'Waktunya minum obat ${reminder.referenceName}';
       } else {
         title = 'Pengingat';
