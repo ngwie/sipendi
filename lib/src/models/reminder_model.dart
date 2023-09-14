@@ -49,7 +49,7 @@ class ReminderTimeModel {
   });
 
   factory ReminderTimeModel.fromHash(Map<String, dynamic> data) {
-    DateTime dateTime = DateFormat("HH:mm").parse(data['time']);
+    DateTime dateTime = DateFormat("h:mm a").parse(data['time']);
     TimeOfDay time = TimeOfDay.fromDateTime(dateTime);
 
     return ReminderTimeModel(

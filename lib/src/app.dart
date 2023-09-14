@@ -8,6 +8,7 @@ import 'package:sipendi/src/screens/medicine_add.dart';
 import 'package:sipendi/src/screens/medicine_detail.dart';
 import 'package:sipendi/src/screens/reminder.dart';
 import 'package:sipendi/src/screens/reminder_add.dart';
+import 'package:sipendi/src/screens/reminder_edit.dart';
 import 'package:sipendi/src/screens/sign_in.dart';
 import 'package:sipendi/src/screens/sign_up.dart';
 import 'package:sipendi/src/theme.dart';
@@ -57,7 +58,12 @@ final _router = GoRouter(
               GoRoute(
                 path: 'add',
                 builder: (context, state) => const ReminderAddScreen(),
-              )
+              ),
+              GoRoute(
+                path: ':id',
+                builder: (context, state) =>
+                    ReminderEditScreen(id: state.pathParameters['id']!),
+              ),
             ],
           ),
         ],

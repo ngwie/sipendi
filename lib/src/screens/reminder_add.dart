@@ -2,6 +2,8 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sipendi/src/models/medicine_model.dart';
+import 'package:sipendi/src/models/reminder_model.dart';
+import 'package:sipendi/src/utils/alarm_notification.dart';
 import 'package:sipendi/src/utils/sqlite_db.dart';
 import 'package:sipendi/src/utils/string_validation.dart';
 import 'package:sqflite/sqflite.dart';
@@ -96,12 +98,50 @@ class _ReminderAddScreenState extends State<ReminderAddScreen> {
 
       Batch batch = SqliteDb.client.batch();
       for (var time in _reminderTimes) {
-        batch.insert('reminder_time', {
-          'reminder_id': reminderId,
-          'time': time.format(context),
-        });
+        if (context.mounted) {
+          batch.insert('reminder_time', {
+            'reminder_id': reminderId,
+            'time': time.format(context),
+          });
+        }
       }
       await batch.commit(noResult: true);
+
+      final reminders = await SqliteDb.client.query(
+        'reminder',
+        where: 'id = ?',
+        whereArgs: [reminderId],
+      );
+      final reminderTimes = await SqliteDb.client.query(
+        'reminder_time',
+        where: 'reminder_id = ?',
+        whereArgs: [reminderId],
+      );
+
+      final reminder = ReminderModel.fromHash({
+        ...reminders.first,
+        'time_list': reminderTimes,
+      });
+
+      String title = '';
+      String body = '';
+
+      if (reminder.context == 'taking_medicine') {
+        title = 'Pengigat Obat';
+        body = 'Waktunya minum obat ${reminder.referenceName}';
+      } else {
+        title = 'Pengingat';
+        body = 'Waktunya mengukur ${reminder.referenceName}';
+      }
+
+      for (var reminderTime in reminder.times) {
+        await AlarmNotification.schedule(
+          id: reminderTime.id,
+          time: reminderTime.time,
+          title: title,
+          body: body,
+        );
+      }
 
       if (context.mounted) {
         context.pop(true);

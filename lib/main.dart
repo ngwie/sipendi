@@ -4,6 +4,7 @@ import 'package:sipendi/src/app.dart';
 import 'package:sipendi/src/app_config.dart';
 import 'package:sipendi/src/models/user_auth.dart';
 import 'package:sipendi/src/utils/sqlite_db.dart';
+import 'package:sipendi/src/utils/alarm_notification.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
@@ -14,6 +15,7 @@ Future<void> main() async {
       url: config.supabaseUrl, anonKey: config.supabaseAnonKey);
 
   await SqliteDb.initialize();
+  await AlarmNotification.initialize();
 
   runApp(
     MultiProvider(
