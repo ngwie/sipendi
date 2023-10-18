@@ -11,11 +11,13 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final config = await AppConfig.forEnvironment();
-  await Supabase.initialize(
-      url: config.supabaseUrl, anonKey: config.supabaseAnonKey);
 
   await SqliteDb.initialize();
   await AlarmNotification.initialize();
+  await Supabase.initialize(
+    url: config.supabaseUrl,
+    anonKey: config.supabaseAnonKey,
+  );
 
   runApp(
     MultiProvider(

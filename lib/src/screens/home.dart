@@ -86,6 +86,7 @@ class HomeScreen extends StatelessWidget {
                       context,
                       title: 'Rekam Data',
                       iconPath: 'assets/icon/list_alt.svg',
+                      to: '/medical-record',
                     ),
                     const SizedBox(width: 50),
                     _menuItem(
