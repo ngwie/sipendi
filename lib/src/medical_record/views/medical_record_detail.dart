@@ -242,51 +242,23 @@ class MedicalRecordDetailScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           SfCartesianChart(
-            // Initialize category axis
             primaryXAxis: DateTimeAxis(),
+            series: pageType.resourceTypes.map((resourceType) {
+              final records = medicalRecords
+                  .where((record) => record.type == resourceType)
+                  .toList();
 
-            series: <LineSeries<_ChartData, DateTime>>[
-              LineSeries<_ChartData, DateTime>(
-                // Bind data source
-                dataSource: <_ChartData>[
-                  _ChartData(DateTime(1925), 415),
-                  _ChartData(DateTime(1926), 408),
-                  _ChartData(DateTime(1927), 415),
-                  _ChartData(DateTime(1928), 350),
-                  _ChartData(DateTime(1929), 375),
-                  _ChartData(DateTime(1930), 500),
-                  _ChartData(DateTime(1931), 390),
-                  _ChartData(DateTime(1932), 450),
-                  _ChartData(DateTime(1933), 440),
-                  _ChartData(DateTime(1934), 350),
-                  _ChartData(DateTime(1935), 400),
-                  _ChartData(DateTime(1936), 365),
-                  _ChartData(DateTime(1937), 490),
-                  _ChartData(DateTime(1938), 400),
-                  _ChartData(DateTime(1939), 520),
-                  _ChartData(DateTime(1940), 510),
-                  _ChartData(DateTime(1941), 395),
-                  _ChartData(DateTime(1942), 380),
-                  _ChartData(DateTime(1943), 404),
-                  _ChartData(DateTime(1944), 400),
-                  _ChartData(DateTime(1945), 500),
-                ],
-                xValueMapper: (_ChartData sales, _) => sales.x,
-                yValueMapper: (_ChartData sales, _) => sales.y,
-                // Enable data label
+              return LineSeries<MedicalRecord, DateTime>(
+                dataSource: records,
+                xValueMapper: (MedicalRecord record, _) => record.createdAt,
+                yValueMapper: (MedicalRecord record, _) =>
+                    double.parse(record.value),
                 dataLabelSettings: const DataLabelSettings(isVisible: true),
-              )
-            ],
+              );
+            }).toList(),
           ),
         ],
       ),
     );
   }
-}
-
-class _ChartData {
-  _ChartData(this.x, this.y);
-
-  final DateTime x;
-  final double y;
 }

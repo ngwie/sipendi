@@ -25,6 +25,7 @@ class MedicalRecordBloc extends Bloc<MedicalRecordEvent, MedicalRecordState> {
           .from('medical_record')
           .select("*")
           .in_('type', event.types.map((type) => type.name).toList())
+          .order('created_at')
           .limit(event.types.length * 10);
 
       final records = MedicalRecord.fromJsonList(result);
