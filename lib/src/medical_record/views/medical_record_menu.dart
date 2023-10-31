@@ -70,12 +70,8 @@ class MedicalRecordMenuScreen extends StatelessWidget {
   Widget _menuItem(BuildContext context,
       {required MedicalRecordPageType pageType, required String label}) {
     return ElevatedButton(
-      onPressed: () async {
+      onPressed: () {
         context.push('/medical-record/${pageType.name}');
-        /* final bool? value = await context.push('/medical-record/${pageType.name}');
-        if ((value ?? false) && context.mounted) {
-          _getUserMedicine(context);
-        } */
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.white,
