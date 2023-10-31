@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:sipendi/src/medical_record/views/medical_record_detail.dart';
@@ -15,6 +16,8 @@ import 'package:sipendi/src/screens/reminder_edit.dart';
 import 'package:sipendi/src/screens/sign_in.dart';
 import 'package:sipendi/src/screens/sign_up.dart';
 import 'package:sipendi/src/theme.dart';
+
+import 'medical_record/bloc/medical_record_bloc.dart';
 
 final _router = GoRouter(
     redirect: (context, state) {
@@ -106,46 +109,15 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: _router,
-      theme: ThemeData(
-        colorScheme: const ColorScheme(
-          brightness: Brightness.light,
-          primary: ThemeColor.greenSheen,
-          onPrimary: ThemeColor.paleSpringBud,
-          secondary: ThemeColor.rackley,
-          onSecondary: ThemeColor.paleSpringBud,
-          error: ThemeColor.sunsetOrange,
-          onError: ThemeColor.paleSpringBud,
-          background: Colors.white,
-          onBackground: ThemeColor.greenSheen,
-          surface: Colors.white,
-          onSurface: ThemeColor.rackley,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<MedicalRecordBloc>(
+          create: (BuildContext context) => MedicalRecordBloc(),
         ),
-        textTheme: const TextTheme(
-          titleLarge: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.w700,
-            color: ThemeColor.rackley,
-          ),
-          headlineSmall: TextStyle(
-            fontSize: 24.0,
-            fontWeight: FontWeight.w500,
-            color: ThemeColor.greenSheen,
-          ),
-          labelLarge: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: ThemeColor.paleSpringBud,
-          ),
-        ),
-        appBarTheme: const AppBarTheme(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          iconTheme: IconThemeData(
-            color: ThemeColor.greenSheen,
-          ),
-        ),
+      ],
+      child: MaterialApp.router(
+        routerConfig: _router,
+        theme: ThemeConfig.theme,
       ),
     );
   }

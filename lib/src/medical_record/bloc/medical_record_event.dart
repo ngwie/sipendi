@@ -13,3 +13,12 @@ final class MedicalRecordFetched extends MedicalRecordEvent {
   @override
   List<Object> get props => [types];
 }
+
+final class MedicalRecordAdded extends MedicalRecordEvent {
+  MedicalRecordAdded({required this.data});
+
+  final List<MedicalRecordFormData> data;
+
+  @override
+  List<Object> get props => [data];
+}

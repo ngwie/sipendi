@@ -32,3 +32,24 @@ extension MedicalRecordResourceType on MedicalRecordPageType {
     }
   }
 }
+
+extension MedicalRecordPageTypeTitle on MedicalRecordPageType {
+  String get title {
+    switch (this) {
+      case MedicalRecordPageType.bloodPressure:
+        return 'Tekanan Darah';
+      case MedicalRecordPageType.bloodSugar:
+        return 'Gula Darah';
+      case MedicalRecordPageType.hemoglobin:
+        return 'HbA1C';
+      case MedicalRecordPageType.cholesterol:
+        return 'Kolesterol';
+      case MedicalRecordPageType.bodyWeight:
+        return 'Berat Badan';
+      case MedicalRecordPageType.abdominalCircumference:
+        return 'Lingkar Perut';
+      default:
+        return '';
+    }
+  }
+}

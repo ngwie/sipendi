@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sipendi/src/utils/string_validation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../bloc/medical_record_bloc.dart';
+import '../models/medical_record_form_data.dart';
 import '../models/medical_record_page_type.dart';
+import '../models/medical_record_type.dart';
+import '../../utils/string_validation.dart';
 
 class MedicalRecordAddScreen extends StatefulWidget {
   final String pageTypeName;
@@ -23,6 +27,61 @@ class _MedicalRecordAddScreenState extends State<MedicalRecordAddScreen> {
   final _hemoglobinA1cController = TextEditingController();
   final _abdominalCircumferenceController = TextEditingController();
 
+  Future<void> _onSubmit() async {
+    final List<MedicalRecordFormData> data = [];
+    final pageType = MedicalRecordPageType.values.byName(widget.pageTypeName);
+
+    pageType.resourceTypes.forEach((resourceType) {
+      switch (resourceType) {
+        case MedicalRecordType.body_weight:
+          data.add(MedicalRecordFormData(
+            type: MedicalRecordType.body_weight,
+            value: _bodyWeightController.text.trim(),
+          ));
+          break;
+        case MedicalRecordType.hemoglobin_a1c:
+          data.add(MedicalRecordFormData(
+            type: MedicalRecordType.hemoglobin_a1c,
+            value: _hemoglobinA1cController.text.trim(),
+          ));
+          break;
+        case MedicalRecordType.blood_sugar:
+          data.add(MedicalRecordFormData(
+            type: MedicalRecordType.blood_sugar,
+            value: _bloodSugarController.text.trim(),
+          ));
+          break;
+        case MedicalRecordType.blood_pressure_systolic:
+          data.add(MedicalRecordFormData(
+            type: MedicalRecordType.blood_pressure_systolic,
+            value: _systolicController.text.trim(),
+          ));
+          break;
+        case MedicalRecordType.blood_pressure_diastolic:
+          data.add(MedicalRecordFormData(
+            type: MedicalRecordType.blood_pressure_diastolic,
+            value: _diastolicController.text.trim(),
+          ));
+          break;
+        case MedicalRecordType.cholesterol:
+          data.add(MedicalRecordFormData(
+            type: MedicalRecordType.cholesterol,
+            value: _cholesterolController.text.trim(),
+          ));
+          break;
+        case MedicalRecordType.abdominal_circumference:
+          data.add(MedicalRecordFormData(
+            type: MedicalRecordType.abdominal_circumference,
+            value: _abdominalCircumferenceController.text.trim(),
+          ));
+          break;
+        default:
+      }
+    });
+
+    context.read<MedicalRecordBloc>().add(MedicalRecordAdded(data: data));
+  }
+
   @override
   Widget build(BuildContext context) {
     final pageType = MedicalRecordPageType.values.byName(widget.pageTypeName);
@@ -39,7 +98,7 @@ class _MedicalRecordAddScreenState extends State<MedicalRecordAddScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _textTitle(context, pageType: pageType),
+                    pageType.title,
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   const SizedBox(height: 18),
@@ -49,10 +108,8 @@ class _MedicalRecordAddScreenState extends State<MedicalRecordAddScreen> {
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(50),
                     ),
+                    onPressed: _onSubmit,
                     child: const Text('Simpan'),
-                    onPressed: () async {
-                      // save and go back
-                    },
                   ),
                 ],
               ),
@@ -61,28 +118,6 @@ class _MedicalRecordAddScreenState extends State<MedicalRecordAddScreen> {
         ),
       ),
     );
-  }
-
-  String _textTitle(
-    BuildContext context, {
-    required MedicalRecordPageType pageType,
-  }) {
-    switch (pageType) {
-      case MedicalRecordPageType.bloodPressure:
-        return 'Tekanan Darah';
-      case MedicalRecordPageType.bloodSugar:
-        return 'Gula Darah';
-      case MedicalRecordPageType.hemoglobin:
-        return 'HbA1C';
-      case MedicalRecordPageType.cholesterol:
-        return 'Kolesterol';
-      case MedicalRecordPageType.bodyWeight:
-        return 'Berat Badan';
-      case MedicalRecordPageType.abdominalCircumference:
-        return 'Lingkar Perut';
-      default:
-        return '';
-    }
   }
 
   List<Widget> _formField(
