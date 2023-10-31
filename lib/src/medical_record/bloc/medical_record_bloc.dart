@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/medical_record.dart';
+import '../models/medical_record_type.dart';
 
 part 'medical_record_event.dart';
 part 'medical_record_state.dart';

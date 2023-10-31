@@ -6,6 +6,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../bloc/medical_record_bloc.dart';
 import '../models/medical_record.dart';
+import '../models/medical_record_type.dart';
 import '../models/medical_record_page_type.dart';
 
 class MedicalRecordDetailScreen extends StatelessWidget {

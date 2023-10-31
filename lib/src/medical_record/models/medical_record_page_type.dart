@@ -1,4 +1,4 @@
-import './medical_record.dart';
+import 'medical_record_type.dart';
 
 enum MedicalRecordPageType {
   bloodSugar,
