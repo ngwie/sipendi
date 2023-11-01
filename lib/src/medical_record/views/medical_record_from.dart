@@ -27,61 +27,6 @@ class _MedicalRecordAddScreenState extends State<MedicalRecordAddScreen> {
   final _hemoglobinA1cController = TextEditingController();
   final _abdominalCircumferenceController = TextEditingController();
 
-  Future<void> _onSubmit() async {
-    final List<MedicalRecordFormData> data = [];
-    final pageType = MedicalRecordPageType.values.byName(widget.pageTypeName);
-
-    pageType.resourceTypes.forEach((resourceType) {
-      switch (resourceType) {
-        case MedicalRecordType.body_weight:
-          data.add(MedicalRecordFormData(
-            type: MedicalRecordType.body_weight,
-            value: _bodyWeightController.text.trim(),
-          ));
-          break;
-        case MedicalRecordType.hemoglobin_a1c:
-          data.add(MedicalRecordFormData(
-            type: MedicalRecordType.hemoglobin_a1c,
-            value: _hemoglobinA1cController.text.trim(),
-          ));
-          break;
-        case MedicalRecordType.blood_sugar:
-          data.add(MedicalRecordFormData(
-            type: MedicalRecordType.blood_sugar,
-            value: _bloodSugarController.text.trim(),
-          ));
-          break;
-        case MedicalRecordType.blood_pressure_systolic:
-          data.add(MedicalRecordFormData(
-            type: MedicalRecordType.blood_pressure_systolic,
-            value: _systolicController.text.trim(),
-          ));
-          break;
-        case MedicalRecordType.blood_pressure_diastolic:
-          data.add(MedicalRecordFormData(
-            type: MedicalRecordType.blood_pressure_diastolic,
-            value: _diastolicController.text.trim(),
-          ));
-          break;
-        case MedicalRecordType.cholesterol:
-          data.add(MedicalRecordFormData(
-            type: MedicalRecordType.cholesterol,
-            value: _cholesterolController.text.trim(),
-          ));
-          break;
-        case MedicalRecordType.abdominal_circumference:
-          data.add(MedicalRecordFormData(
-            type: MedicalRecordType.abdominal_circumference,
-            value: _abdominalCircumferenceController.text.trim(),
-          ));
-          break;
-        default:
-      }
-    });
-
-    context.read<MedicalRecordBloc>().add(MedicalRecordAdded(data: data));
-  }
-
   @override
   Widget build(BuildContext context) {
     final pageType = MedicalRecordPageType.values.byName(widget.pageTypeName);
@@ -104,13 +49,7 @@ class _MedicalRecordAddScreenState extends State<MedicalRecordAddScreen> {
                   const SizedBox(height: 18),
                   ..._formField(context, pageType: pageType),
                   const SizedBox(height: 18),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(50),
-                    ),
-                    onPressed: _onSubmit,
-                    child: const Text('Simpan'),
-                  ),
+                  _submitButton(context),
                 ],
               ),
             ),
@@ -199,5 +138,85 @@ class _MedicalRecordAddScreenState extends State<MedicalRecordAddScreen> {
       validator: (value) =>
           StringValidation.isEmpty(value) ? '$label tidak boleh kosong' : null,
     );
+  }
+
+  Widget _submitButton(BuildContext context) {
+    return BlocBuilder<MedicalRecordBloc, MedicalRecordState>(
+        builder: (context, state) {
+      return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          minimumSize: const Size.fromHeight(50),
+        ),
+        onPressed: () => _onSubmit(context, state),
+        child: state.status == MedicalRecordStateStatus.loading
+            ? SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              )
+            : const Text('Simpan'),
+      );
+    });
+  }
+
+  Future<void> _onSubmit(BuildContext context, MedicalRecordState state) async {
+    if (state.status == MedicalRecordStateStatus.loading) {
+      return;
+    }
+
+    final List<MedicalRecordFormData> data = [];
+    final pageType = MedicalRecordPageType.values.byName(widget.pageTypeName);
+
+    for (var resourceType in pageType.resourceTypes) {
+      switch (resourceType) {
+        case MedicalRecordType.body_weight:
+          data.add(MedicalRecordFormData(
+            type: MedicalRecordType.body_weight,
+            value: _bodyWeightController.text.trim(),
+          ));
+          break;
+        case MedicalRecordType.hemoglobin_a1c:
+          data.add(MedicalRecordFormData(
+            type: MedicalRecordType.hemoglobin_a1c,
+            value: _hemoglobinA1cController.text.trim(),
+          ));
+          break;
+        case MedicalRecordType.blood_sugar:
+          data.add(MedicalRecordFormData(
+            type: MedicalRecordType.blood_sugar,
+            value: _bloodSugarController.text.trim(),
+          ));
+          break;
+        case MedicalRecordType.blood_pressure_systolic:
+          data.add(MedicalRecordFormData(
+            type: MedicalRecordType.blood_pressure_systolic,
+            value: _systolicController.text.trim(),
+          ));
+          break;
+        case MedicalRecordType.blood_pressure_diastolic:
+          data.add(MedicalRecordFormData(
+            type: MedicalRecordType.blood_pressure_diastolic,
+            value: _diastolicController.text.trim(),
+          ));
+          break;
+        case MedicalRecordType.cholesterol:
+          data.add(MedicalRecordFormData(
+            type: MedicalRecordType.cholesterol,
+            value: _cholesterolController.text.trim(),
+          ));
+          break;
+        case MedicalRecordType.abdominal_circumference:
+          data.add(MedicalRecordFormData(
+            type: MedicalRecordType.abdominal_circumference,
+            value: _abdominalCircumferenceController.text.trim(),
+          ));
+          break;
+        default:
+      }
+    }
+
+    context.read<MedicalRecordBloc>().add(MedicalRecordAdded(data: data));
   }
 }

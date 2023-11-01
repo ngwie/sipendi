@@ -35,10 +35,19 @@ class MedicalRecordBloc extends Bloc<MedicalRecordEvent, MedicalRecordState> {
 
       emit(state.copyWith(
         status: MedicalRecordStateStatus.success,
-        medicalRecords: {...state.medicalRecords, ...records},
+        error: '',
+        medicalRecords: {...records, ...state.medicalRecords},
+      ));
+    } on PostgrestException catch (error) {
+      emit(state.copyWith(
+        status: MedicalRecordStateStatus.failure,
+        error: error.message,
       ));
     } catch (error) {
-      emit(state.copyWith(status: MedicalRecordStateStatus.failure));
+      emit(state.copyWith(
+        status: MedicalRecordStateStatus.failure,
+        error: error.toString(),
+      ));
     }
   }
 
@@ -46,12 +55,9 @@ class MedicalRecordBloc extends Bloc<MedicalRecordEvent, MedicalRecordState> {
     MedicalRecordAdded event,
     Emitter<MedicalRecordState> emit,
   ) async {
-    /*
-    - handle error
-    - handle loading
-    - handle top provider
-     */
     try {
+      emit(state.copyWith(status: MedicalRecordStateStatus.loading));
+
       final payload = event.data
           .map((data) => {
                 'type': data.type.name,
@@ -67,11 +73,18 @@ class MedicalRecordBloc extends Bloc<MedicalRecordEvent, MedicalRecordState> {
 
       emit(state.copyWith(
         status: MedicalRecordStateStatus.success,
-        medicalRecords: {...state.medicalRecords, ...records},
+        medicalRecords: {...records, ...state.medicalRecords},
+      ));
+    } on PostgrestException catch (error) {
+      emit(state.copyWith(
+        status: MedicalRecordStateStatus.failure,
+        error: error.message,
       ));
     } catch (error) {
-      // handle error
-      print(error);
+      emit(state.copyWith(
+        status: MedicalRecordStateStatus.failure,
+        error: error.toString(),
+      ));
     }
   }
 }

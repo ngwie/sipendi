@@ -25,40 +25,38 @@ class MedicalRecordDetailScreen extends StatelessWidget {
           color: Theme.of(context).colorScheme.onPrimary,
         ),
       ),
-      body: BlocProvider(
-        create: (_) => MedicalRecordBloc()
-          ..add(MedicalRecordFetched(types: pageType.resourceTypes)),
-        child: BlocBuilder<MedicalRecordBloc, MedicalRecordState>(
-            builder: (context, state) {
-          final loading = state.status == MedicalRecordStateStatus.loading;
-          final records = state.medicalRecords
-              .where((record) => pageType.resourceTypes.contains(record.type))
-              .toList();
+      body: BlocBuilder<MedicalRecordBloc, MedicalRecordState>(
+          bloc: BlocProvider.of<MedicalRecordBloc>(context)
+            ..add(MedicalRecordFetched(types: pageType.resourceTypes)),
+          builder: (context, state) {
+            final loading = state.status == MedicalRecordStateStatus.loading;
+            final records = state.medicalRecords
+                .where((record) => pageType.resourceTypes.contains(record.type))
+                .toList();
 
-          // records are empty and state is loading, show loading state
-          // records are empty and state isn't loading or error, show N/a data
-          // records aren't empty, render the records
-          return SingleChildScrollView(
-            child: Column(children: [
-              _hero(
-                context,
-                pageType: pageType,
-                medicalRecords: records,
-                loading: loading,
-              ),
-              const SizedBox(height: 18),
-              _addRecord(context),
-              const SizedBox(height: 32),
-              _chart(
-                context,
-                pageType: pageType,
-                medicalRecords: records,
-                loading: loading,
-              ),
-            ]),
-          );
-        }),
-      ),
+            // records are empty and state is loading, show loading state
+            // records are empty and state isn't loading or error, show N/a data
+            // records aren't empty, render the records
+            return SingleChildScrollView(
+              child: Column(children: [
+                _hero(
+                  context,
+                  pageType: pageType,
+                  medicalRecords: records,
+                  loading: loading,
+                ),
+                const SizedBox(height: 18),
+                _addRecord(context),
+                const SizedBox(height: 32),
+                _chart(
+                  context,
+                  pageType: pageType,
+                  medicalRecords: records,
+                  loading: loading,
+                ),
+              ]),
+            );
+          }),
     );
   }
 
