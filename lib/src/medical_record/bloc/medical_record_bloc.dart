@@ -56,7 +56,7 @@ class MedicalRecordBloc extends Bloc<MedicalRecordEvent, MedicalRecordState> {
     Emitter<MedicalRecordState> emit,
   ) async {
     try {
-      emit(state.copyWith(status: MedicalRecordStateStatus.loading));
+      emit(state.copyWith(statusAdd: MedicalRecordStateStatus.loading));
 
       final payload = event.data
           .map((data) => {
@@ -72,18 +72,18 @@ class MedicalRecordBloc extends Bloc<MedicalRecordEvent, MedicalRecordState> {
       final records = MedicalRecord.fromJsonList(result);
 
       emit(state.copyWith(
-        status: MedicalRecordStateStatus.success,
+        statusAdd: MedicalRecordStateStatus.success,
         medicalRecords: {...records, ...state.medicalRecords},
       ));
     } on PostgrestException catch (error) {
       emit(state.copyWith(
-        status: MedicalRecordStateStatus.failure,
-        error: error.message,
+        statusAdd: MedicalRecordStateStatus.failure,
+        errorAdd: error.message,
       ));
     } catch (error) {
       emit(state.copyWith(
-        status: MedicalRecordStateStatus.failure,
-        error: error.toString(),
+        statusAdd: MedicalRecordStateStatus.failure,
+        errorAdd: error.toString(),
       ));
     }
   }

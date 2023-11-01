@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../bloc/medical_record_bloc.dart';
 import '../models/medical_record_form_data.dart';
@@ -141,28 +142,47 @@ class _MedicalRecordAddScreenState extends State<MedicalRecordAddScreen> {
   }
 
   Widget _submitButton(BuildContext context) {
-    return BlocBuilder<MedicalRecordBloc, MedicalRecordState>(
-        builder: (context, state) {
-      return ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          minimumSize: const Size.fromHeight(50),
-        ),
-        onPressed: () => _onSubmit(context, state),
-        child: state.status == MedicalRecordStateStatus.loading
-            ? SizedBox(
-                height: 24,
-                width: 24,
-                child: CircularProgressIndicator(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
-              )
-            : const Text('Simpan'),
-      );
-    });
+    return BlocConsumer<MedicalRecordBloc, MedicalRecordState>(
+      listenWhen: (previous, current) =>
+          previous.statusAdd == MedicalRecordStateStatus.loading,
+      listener: (context, state) {
+        if (state.statusAdd == MedicalRecordStateStatus.success) {
+          context.pop();
+        }
+
+        if (state.statusAdd == MedicalRecordStateStatus.failure) {
+          final errorMessage = state.errorAdd != ''
+              ? state.errorAdd
+              : 'Unexpected error occurred';
+
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(errorMessage),
+            behavior: SnackBarBehavior.floating,
+          ));
+        }
+      },
+      builder: (context, state) {
+        return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size.fromHeight(50),
+          ),
+          onPressed: () => _onSubmit(context, state),
+          child: state.statusAdd == MedicalRecordStateStatus.loading
+              ? SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                )
+              : const Text('Simpan'),
+        );
+      },
+    );
   }
 
   Future<void> _onSubmit(BuildContext context, MedicalRecordState state) async {
-    if (state.status == MedicalRecordStateStatus.loading) {
+    if (state.statusAdd == MedicalRecordStateStatus.loading) {
       return;
     }
 
