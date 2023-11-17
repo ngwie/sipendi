@@ -123,8 +123,8 @@ class _SignInScreenState extends State<SignInScreen> {
                             } catch (error) {
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: Text('Unexpected error occurred'),
+                                    .showSnackBar(SnackBar(
+                                  content: Text(error.toString()),
                                   behavior: SnackBarBehavior.floating,
                                 ));
                               }
