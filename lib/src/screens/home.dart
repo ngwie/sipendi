@@ -113,6 +113,7 @@ class HomeScreen extends StatelessWidget {
                       context,
                       title: 'Keluhan Obat',
                       iconPath: 'assets/icon/side_effect.svg',
+                      to: '/consultation',
                     ),
                   ],
                 ),

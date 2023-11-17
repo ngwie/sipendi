@@ -182,9 +182,8 @@ class _MedicalRecordAddScreenState extends State<MedicalRecordAddScreen> {
   }
 
   Future<void> _onSubmit(BuildContext context, MedicalRecordState state) async {
-    if (state.statusAdd == MedicalRecordStateStatus.loading) {
-      return;
-    }
+    if (state.statusAdd == MedicalRecordStateStatus.loading) return;
+    if (!_formKey.currentState!.validate()) return;
 
     final List<MedicalRecordFormData> data = [];
     final pageType = MedicalRecordPageType.values.byName(widget.pageTypeName);
