@@ -4,14 +4,14 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz;
 
-const channelId = 'sipendi_notification_1';
-const channelName = 'sipendi_notification';
+const channelId = 'sipendi_notification_2';
+const channelName = 'sipendi_notification_2';
 
 class AlarmNotification {
   static final _notification = FlutterLocalNotificationsPlugin();
 
   static Future<void> initialize() async {
-    const initAndroid = AndroidInitializationSettings('mipmap/ic_launcher');
+    const initAndroid = AndroidInitializationSettings('mipmap/ic_notification');
     const initSettings = InitializationSettings(android: initAndroid);
     await _notification.initialize(initSettings);
 
