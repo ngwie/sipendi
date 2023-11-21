@@ -5,12 +5,10 @@ class Config {
   Config._constructor({
     required this.supabaseUrl,
     required this.supabaseAnonKey,
-    required this.consultationPhoneNumber,
   });
 
   final String supabaseUrl;
   final String supabaseAnonKey;
-  final String consultationPhoneNumber;
 
   static Config? _value;
 
@@ -33,7 +31,6 @@ class Config {
     _value = Config._constructor(
       supabaseUrl: json['supabase']['url'],
       supabaseAnonKey: json['supabase']['anonKey'],
-      consultationPhoneNumber: json['consultation']['phoneNumber'],
     );
   }
 }

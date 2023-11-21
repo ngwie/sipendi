@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../utils/config.dart';
+import '../../config/cubit/config_cubit.dart';
 import '../../utils/string_validation.dart';
 import '../bloc/consultation_bloc.dart';
 import '../models/consultation_form_data.dart';
@@ -32,8 +32,11 @@ class _ConsultationFormState extends State<ConsultationFormScreen> {
           listener: (context, state) {
             if (state.statusAdd == ConsultationStatus.success) {
               final lastConsultation = state.consultations.first;
+              final phoneNumber =
+                  context.read<ConfigCubit>().get('consultation_phone_number');
               final url = Uri.parse(
-                  'https://wa.me/${Config.value.consultationPhoneNumber}?text=${lastConsultation.title}\n${lastConsultation.body}');
+                  'https://wa.me/$phoneNumber?text=${lastConsultation.title}\n${lastConsultation.body}');
+
               launchUrl(url);
               context.pop();
             }
