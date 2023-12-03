@@ -148,8 +148,8 @@ class _ReminderAddScreenState extends State<ReminderAddScreen> {
       }
     } catch (error) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Unexpected error occurred'),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(error.toString()),
           behavior: SnackBarBehavior.floating,
         ));
       }
