@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'src/app.dart';
-import 'src/models/user_auth.dart';
+import 'src/auth/models/user_auth.dart';
 import 'src/utils/config.dart';
 import 'src/utils/sqlite_db.dart';
 import 'src/utils/alarm_notification.dart';

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:sipendi/src/models/user_auth.dart';
+
+import '../auth/models/user_auth.dart';
 
 enum ProfileMenuItem { logout }
 

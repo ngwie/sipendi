@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:sipendi/src/models/user_auth.dart';
-import 'package:sipendi/src/utils/string_validation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../models/user_auth.dart';
+import '../../utils/string_validation.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
