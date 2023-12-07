@@ -29,13 +29,9 @@ class ThemeConfig {
     ),
     textTheme: const TextTheme(
       titleLarge: TextStyle(
-        fontSize: 32,
-        fontWeight: FontWeight.w700,
-        color: ThemeColor.rackley,
+        color: ThemeColor.greenSheen,
       ),
       headlineSmall: TextStyle(
-        fontSize: 24.0,
-        fontWeight: FontWeight.w500,
         color: ThemeColor.greenSheen,
       ),
       labelLarge: TextStyle(
