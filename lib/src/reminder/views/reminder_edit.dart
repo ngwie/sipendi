@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sipendi/src/models/reminder_model.dart';
-import 'package:sipendi/src/utils/alarm_notification.dart';
-import 'package:sipendi/src/utils/sqlite_db.dart';
+
+import '../models/reminder_model.dart';
+
+import '../../utils/alarm_notification.dart';
+import '../../utils/sqlite_db.dart';
 
 class ReminderEditScreen extends StatefulWidget {
   final String id;

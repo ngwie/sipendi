@@ -5,9 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:sipendi/src/screens/medicine.dart';
 import 'package:sipendi/src/screens/medicine_add.dart';
 import 'package:sipendi/src/screens/medicine_detail.dart';
-import 'package:sipendi/src/screens/reminder.dart';
-import 'package:sipendi/src/screens/reminder_add.dart';
-import 'package:sipendi/src/screens/reminder_edit.dart';
 
 import 'auth/models/user_auth.dart';
 import 'auth/views/sign_in.dart';
@@ -21,6 +18,10 @@ import 'medical_record/bloc/medical_record_bloc.dart';
 import 'medical_record/views/medical_record_detail.dart';
 import 'medical_record/views/medical_record_from.dart';
 import 'medical_record/views/medical_record_menu.dart';
+import 'reminder/views/reminder.dart';
+import 'reminder/views/reminder_add.dart';
+import 'reminder/views/reminder_edit.dart';
+
 import 'theme.dart';
 
 final _router = GoRouter(

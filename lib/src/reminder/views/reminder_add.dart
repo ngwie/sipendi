@@ -1,15 +1,17 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sipendi/src/models/medicine_model.dart';
-import 'package:sipendi/src/models/reminder_model.dart';
-import 'package:sipendi/src/utils/alarm_notification.dart';
-import 'package:sipendi/src/utils/sqlite_db.dart';
-import 'package:sipendi/src/utils/string_validation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../widgets/radio_button.dart';
+import '../../widgets/radio_button.dart';
+
+import '../../utils/alarm_notification.dart';
+import '../../utils/sqlite_db.dart';
+import '../../utils/string_validation.dart';
+
+import '../../models/medicine_model.dart';
+import '../models/reminder_model.dart';
 
 enum ReminderContext { takingMedicine, medicalRecord }
 
