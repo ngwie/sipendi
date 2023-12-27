@@ -31,6 +31,10 @@ class ThemeConfig {
       titleLarge: TextStyle(
         color: ThemeColor.greenSheen,
       ),
+      headlineLarge: TextStyle(
+        color: ThemeColor.rackley,
+        fontWeight: FontWeight.w600,
+      ),
       headlineSmall: TextStyle(
         color: ThemeColor.greenSheen,
       ),
