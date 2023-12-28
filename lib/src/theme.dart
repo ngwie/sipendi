@@ -29,19 +29,19 @@ class ThemeConfig {
     ),
     textTheme: const TextTheme(
       titleLarge: TextStyle(
-        color: ThemeColor.greenSheen,
+        fontSize: 22,
+        color: ThemeColor.rackley,
       ),
       headlineLarge: TextStyle(
-        color: ThemeColor.rackley,
         fontWeight: FontWeight.w600,
+        color: ThemeColor.rackley,
       ),
       headlineSmall: TextStyle(
         color: ThemeColor.greenSheen,
       ),
       labelLarge: TextStyle(
         fontSize: 16,
-        fontWeight: FontWeight.w600,
-        color: ThemeColor.paleSpringBud,
+        fontWeight: FontWeight.w500,
       ),
     ),
     appBarTheme: const AppBarTheme(
@@ -50,6 +50,15 @@ class ThemeConfig {
       iconTheme: IconThemeData(
         color: ThemeColor.greenSheen,
       ),
+      centerTitle: true,
+      titleTextStyle: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+        color: ThemeColor.rackley,
+      ),
+    ),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: ThemeColor.greenSheen,
     ),
   );
 }

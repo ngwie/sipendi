@@ -19,7 +19,7 @@ class ReminderScreen extends StatefulWidget {
 }
 
 class _ReminderScreenState extends State<ReminderScreen> {
-  List<ReminderModel>? _reminders;
+  List<ReminderModel> _reminders = [];
 
   @override
   void initState() {
@@ -55,28 +55,27 @@ class _ReminderScreenState extends State<ReminderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text('Pengingat'),
+      ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 28.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Pengingat',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 32),
-                  child: Column(
-                    children: _reminderList(context, reminders: _reminders),
-                  ),
-                ),
-              ],
+        child: Builder(builder: (context) {
+          // TODO: add loading view
+
+          if (_reminders.isEmpty) {
+            return _empty(context);
+          }
+
+          return ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            itemCount: _reminders.length,
+            itemBuilder: (context, index) => _reminderItem(
+              context,
+              reminder: _reminders[index],
             ),
-          ),
-        ),
+            separatorBuilder: (context, index) => const SizedBox(height: 16),
+          );
+        }),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -86,32 +85,22 @@ class _ReminderScreenState extends State<ReminderScreen> {
           }
         },
         tooltip: 'Tambah Pengingat',
-        backgroundColor: const Color(0xFF75B79E),
-        child: const Icon(
-          Icons.add,
-          color: Color(0xFFEEF9BF),
-        ),
+        child: const Icon(Icons.add),
       ),
     );
   }
 
-  List<Widget> _reminderList(BuildContext context,
-      {List<ReminderModel>? reminders}) {
-    if (reminders == null) return [];
-    return reminders.fold([], (val, rem) {
-      val.addAll([
-        _reminderItem(
-          context,
-          reminder: rem,
-        ),
-        const SizedBox(height: 18),
-      ]);
-      return val;
-    });
-  }
+  Widget _reminderItem(
+    BuildContext context, {
+    required ReminderModel reminder,
+  }) {
+    final String reminderIcon =
+        contextAssetMap[reminder.context] ?? 'assets/icon/meds.svg';
+    final String reminderTitle = reminder.referenceName ?? 'Pengingat';
+    final String reminderTimes = reminder.times
+        .map((reminderTime) => reminderTime.time.format(context))
+        .join(', ');
 
-  Widget _reminderItem(BuildContext context,
-      {required ReminderModel reminder}) {
     return ElevatedButton(
       onPressed: () async {
         final bool? value = await context.push('/reminder/${reminder.id}');
@@ -120,40 +109,54 @@ class _ReminderScreenState extends State<ReminderScreen> {
         }
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF75B79E),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 18),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       child: Row(
         children: [
-          SvgPicture.asset(
-            contextAssetMap[reminder.context] ?? 'assets/icon/meds.svg',
-            width: 38,
-          ),
-          const SizedBox(width: 18),
+          SvgPicture.asset(reminderIcon, width: 32),
+          const SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                reminder.referenceName ?? 'Pengingat',
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFFEEF9BF),
-                ),
+                reminderTitle,
+                style: const TextStyle(fontSize: 20),
               ),
+              const SizedBox(height: 2),
               Text(
-                reminder.times
-                    .map((reminderTime) => reminderTime.time.format(context))
-                    .join(', '),
+                reminderTimes,
                 style: const TextStyle(
-                  color: Color(0xFFEEF9BF),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
             ],
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _empty(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            'assets/icon/reminder.svg',
+            width: 100,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          const SizedBox(height: 20),
+          Text(
+            'Belum ada pengingat',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: 56, width: double.infinity),
         ],
       ),
     );

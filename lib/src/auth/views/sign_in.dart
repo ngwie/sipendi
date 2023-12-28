@@ -58,7 +58,9 @@ class _SignInScreenState extends State<SignInScreen> {
         children: [
           Text(
             'Silakan Masuk',
-            style: Theme.of(context).textTheme.titleLarge,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
           ),
           const SizedBox(height: 16),
           TextFormField(

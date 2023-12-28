@@ -134,10 +134,7 @@ class HomeScreen extends StatelessWidget {
             Text(
               title,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ],
         ),
