@@ -19,6 +19,7 @@ class ReminderScreen extends StatefulWidget {
 }
 
 class _ReminderScreenState extends State<ReminderScreen> {
+  bool _isLoading = false;
   List<ReminderModel> _reminders = [];
 
   @override
@@ -29,6 +30,10 @@ class _ReminderScreenState extends State<ReminderScreen> {
 
   Future<void> _getUserReminder(BuildContext context) async {
     try {
+      setState(() {
+        _isLoading = true;
+      });
+
       final reminders = await SqliteDb.client.query('reminder');
       final reminderTimes = await SqliteDb.client.query('reminder_time');
 
@@ -40,9 +45,14 @@ class _ReminderScreenState extends State<ReminderScreen> {
       }).toList();
 
       setState(() {
+        _isLoading = false;
         _reminders = ReminderModel.fromHashList(res);
       });
     } catch (error) {
+      setState(() {
+        _isLoading = false;
+      });
+
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Unexpected error occurred'),
@@ -60,7 +70,9 @@ class _ReminderScreenState extends State<ReminderScreen> {
       ),
       body: SafeArea(
         child: Builder(builder: (context) {
-          // TODO: add loading view
+          if (_reminders.isEmpty && _isLoading) {
+            return _loading(context);
+          }
 
           if (_reminders.isEmpty) {
             return _empty(context);
@@ -159,6 +171,13 @@ class _ReminderScreenState extends State<ReminderScreen> {
           const SizedBox(height: 56, width: double.infinity),
         ],
       ),
+    );
+  }
+
+  Widget _loading(BuildContext context) {
+    return const Center(
+      heightFactor: 8,
+      child: CircularProgressIndicator(),
     );
   }
 }
