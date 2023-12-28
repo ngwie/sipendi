@@ -44,6 +44,17 @@ class ThemeConfig {
         fontWeight: FontWeight.w500,
       ),
     ),
+    chipTheme: const ChipThemeData(
+      iconTheme: IconThemeData(
+        color: ThemeColor.paleSpringBud,
+      ),
+      labelStyle: TextStyle(
+        fontWeight: FontWeight.w500,
+        color: ThemeColor.paleSpringBud,
+      ),
+      backgroundColor: ThemeColor.greenSheen,
+      deleteIconColor: ThemeColor.paleSpringBud,
+    ),
     appBarTheme: const AppBarTheme(
       elevation: 0,
       backgroundColor: Colors.transparent,

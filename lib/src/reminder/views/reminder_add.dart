@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../widgets/radio_button.dart';
+// import '../../widgets/radio_button.dart';
 
 import '../../utils/alarm_notification.dart';
 import '../../utils/sqlite_db.dart';
@@ -30,7 +30,7 @@ class ReminderAddScreen extends StatefulWidget {
 class _ReminderAddScreenState extends State<ReminderAddScreen> {
   final _supabase = Supabase.instance.client;
 
-  ReminderContext? _reminderContext = ReminderContext.takingMedicine;
+  final ReminderContext _reminderContext = ReminderContext.takingMedicine;
 
   final _formKey = GlobalKey<FormState>();
   int? _medicineId;
@@ -165,34 +165,29 @@ class _ReminderAddScreenState extends State<ReminderAddScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text('Tambah Pengingat'),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 28.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Tambah Pengingat',
-                    style: Theme.of(context).textTheme.titleLarge,
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ..._buildReminderForm(context),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(50),
                   ),
-                  const SizedBox(height: 18),
-                  ..._buildReminderForm(context),
-                  const SizedBox(height: 18),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(50),
-                    ),
-                    child: const Text('Simpan'),
-                    onPressed: () async {
-                      await _saveReminder(context);
-                    },
-                  ),
-                ],
-              ),
+                  child: const Text('Simpan'),
+                  onPressed: () async {
+                    await _saveReminder(context);
+                  },
+                ),
+              ],
             ),
           ),
         ),
@@ -202,7 +197,7 @@ class _ReminderAddScreenState extends State<ReminderAddScreen> {
 
   List<Widget> _buildReminderForm(BuildContext context) {
     return [
-      Column(
+      /* Column(
         children: <Widget>[
           RadioButton<ReminderContext>(
             label: const Text('Obat'),
@@ -210,7 +205,7 @@ class _ReminderAddScreenState extends State<ReminderAddScreen> {
             groupValue: _reminderContext,
             onChanged: (ReminderContext? value) {
               setState(() {
-                _reminderContext = value;
+                _reminderContext = value!;
               });
             },
           ),
@@ -220,17 +215,17 @@ class _ReminderAddScreenState extends State<ReminderAddScreen> {
             groupValue: _reminderContext,
             onChanged: (ReminderContext? value) {
               setState(() {
-                _reminderContext = value;
+                _reminderContext = value!;
               });
             },
           ),
         ],
       ),
-      const SizedBox(height: 18),
+      const SizedBox(height: 16), */
       ...(_reminderContext == ReminderContext.takingMedicine
           ? _buildMedicineReminderInputs(context)
           : _buildMedicalRecordReminderInputs(context)),
-      const SizedBox(height: 18),
+      const SizedBox(height: 16),
       Wrap(
         alignment: WrapAlignment.spaceBetween,
         spacing: 8,
@@ -238,17 +233,8 @@ class _ReminderAddScreenState extends State<ReminderAddScreen> {
           ...List<Widget>.generate(
             _reminderTimes.length,
             (int index) => InputChip(
-              label: Text(
-                _reminderTimes[index].format(context),
-                style:
-                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-              ),
-              avatar: Icon(
-                Icons.alarm,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              deleteIconColor: Theme.of(context).colorScheme.onPrimary,
+              label: Text(_reminderTimes[index].format(context)),
+              avatar: Icon(Icons.alarm),
               onDeleted: () {
                 setState(() {
                   _reminderTimes.removeAt(index);
@@ -257,17 +243,8 @@ class _ReminderAddScreenState extends State<ReminderAddScreen> {
             ),
           ),
           InputChip(
-            label: Text(
-              'Tambah Jam',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
-            ),
-            avatar: Icon(
-              Icons.add,
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
-            backgroundColor: Theme.of(context).colorScheme.primary,
+            label: const Text('Tambah Jam'),
+            avatar: const Icon(Icons.add),
             onPressed: () async {
               final selectedTime = await showTimePicker(
                 context: context,
