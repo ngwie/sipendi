@@ -33,7 +33,9 @@ class _MedicalRecordAddScreenState extends State<MedicalRecordAddScreen> {
     final pageType = MedicalRecordPageType.values.byName(widget.pageTypeName);
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(pageType.title),
+      ),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Container(
@@ -43,13 +45,9 @@ class _MedicalRecordAddScreenState extends State<MedicalRecordAddScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    pageType.title,
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 16),
                   ..._formField(context, pageType: pageType),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 16),
                   _submitButton(context),
                 ],
               ),
@@ -72,7 +70,7 @@ class _MedicalRecordAddScreenState extends State<MedicalRecordAddScreen> {
             label: 'Sistole',
             controller: _systolicController,
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 16),
           _inputField(
             context,
             label: 'Diastole',

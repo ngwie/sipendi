@@ -10,58 +10,50 @@ class MedicalRecordMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 28.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Kondisi Fisik',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                const SizedBox(height: 18),
-                _menuItem(
-                  context,
-                  pageType: MedicalRecordPageType.bloodSugar,
-                  label: 'Gula Darah',
-                ),
-                const SizedBox(height: 18),
-                _menuItem(
-                  context,
-                  pageType: MedicalRecordPageType.hemoglobin,
-                  label: 'HbA1c',
-                ),
-                const SizedBox(height: 18),
-                _menuItem(
-                  context,
-                  pageType: MedicalRecordPageType.bloodPressure,
-                  label: 'Tekanan Darah',
-                ),
-                const SizedBox(height: 18),
-                _menuItem(
-                  context,
-                  pageType: MedicalRecordPageType.cholesterol,
-                  label: 'Kolesterol',
-                ),
-                const SizedBox(height: 18),
-                _menuItem(
-                  context,
-                  pageType: MedicalRecordPageType.bodyWeight,
-                  label: 'Berat Badan',
-                ),
-                const SizedBox(height: 18),
-                _menuItem(
-                  context,
-                  pageType: MedicalRecordPageType.abdominalCircumference,
-                  label: 'Lingkar Perut',
-                ),
-                const SizedBox(height: 18),
-              ],
+      appBar: AppBar(
+        title: const Text('Kondisi Fisik'),
+      ),
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          children: [
+            _menuItem(
+              context,
+              pageType: MedicalRecordPageType.bloodSugar,
+              label: 'Gula Darah',
             ),
-          ),
+            const SizedBox(height: 16),
+            _menuItem(
+              context,
+              pageType: MedicalRecordPageType.hemoglobin,
+              label: 'HbA1c',
+            ),
+            const SizedBox(height: 16),
+            _menuItem(
+              context,
+              pageType: MedicalRecordPageType.bloodPressure,
+              label: 'Tekanan Darah',
+            ),
+            const SizedBox(height: 16),
+            _menuItem(
+              context,
+              pageType: MedicalRecordPageType.cholesterol,
+              label: 'Kolesterol',
+            ),
+            const SizedBox(height: 16),
+            _menuItem(
+              context,
+              pageType: MedicalRecordPageType.bodyWeight,
+              label: 'Berat Badan',
+            ),
+            const SizedBox(height: 16),
+            _menuItem(
+              context,
+              pageType: MedicalRecordPageType.abdominalCircumference,
+              label: 'Lingkar Perut',
+            ),
+            const SizedBox(height: 16),
+          ],
         ),
       ),
     );
@@ -75,24 +67,18 @@ class MedicalRecordMenuScreen extends StatelessWidget {
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 18),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       child: Row(
         children: [
-          SvgPicture.asset(
-            'assets/icon/doctor.svg',
-            width: 38,
-          ),
-          const SizedBox(width: 18),
+          SvgPicture.asset('assets/icon/doctor.svg', width: 32),
+          const SizedBox(width: 16),
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w500,
-              color: Color(0xFF75B79E),
+            style: TextStyle(
+              fontSize: 20,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
         ],
