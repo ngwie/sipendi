@@ -39,7 +39,7 @@ class MedicineDetailScreen extends StatelessWidget {
             tooltip: 'Hapus obat',
             onPressed: () => _showAlertDialog(context),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 8),
         ],
       ),
       body: SafeArea(

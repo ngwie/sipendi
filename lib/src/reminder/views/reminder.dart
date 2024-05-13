@@ -1,66 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
-import '../models/reminder_model.dart';
-
-import '../../utils/sqlite_db.dart';
+import '../bloc/reminder_bloc.dart';
+import '../models/reminder.dart';
 
 const contextAssetMap = {
   'taking_medicine': 'assets/icon/meds.svg',
   'medical_record': 'assets/icon/list_alt.svg',
 };
 
-class ReminderScreen extends StatefulWidget {
+class ReminderScreen extends StatelessWidget {
   const ReminderScreen({super.key});
-
-  @override
-  State<ReminderScreen> createState() => _ReminderScreenState();
-}
-
-class _ReminderScreenState extends State<ReminderScreen> {
-  bool _isLoading = false;
-  List<ReminderModel> _reminders = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _getUserReminder(context);
-  }
-
-  Future<void> _getUserReminder(BuildContext context) async {
-    try {
-      setState(() {
-        _isLoading = true;
-      });
-
-      final reminders = await SqliteDb.client.query('reminder');
-      final reminderTimes = await SqliteDb.client.query('reminder_time');
-
-      final List<dynamic> res = reminders.map((reminder) {
-        final times = reminderTimes
-            .where((time) => time['reminder_id'] == reminder['id'])
-            .toList();
-        return {...reminder, 'time_list': times};
-      }).toList();
-
-      setState(() {
-        _isLoading = false;
-        _reminders = ReminderModel.fromHashList(res);
-      });
-    } catch (error) {
-      setState(() {
-        _isLoading = false;
-      });
-
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Unexpected error occurred'),
-          behavior: SnackBarBehavior.floating,
-        ));
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,31 +21,49 @@ class _ReminderScreenState extends State<ReminderScreen> {
         title: const Text('Pengingat'),
       ),
       body: SafeArea(
-        child: Builder(builder: (context) {
-          if (_reminders.isEmpty && _isLoading) {
-            return _loading(context);
-          }
+        child: BlocConsumer<ReminderBloc, ReminderState>(
+            bloc: BlocProvider.of<ReminderBloc>(context)
+              ..add(ReminderFetched()),
+            listener: (context, state) {
+              if (state is! ReminderError) return;
 
-          if (_reminders.isEmpty) {
-            return _empty(context);
-          }
+              final errorMessage =
+                  state.error != '' ? state.error : 'Unexpected error occurred';
 
-          return ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            itemCount: _reminders.length,
-            itemBuilder: (context, index) => _reminderItem(
-              context,
-              reminder: _reminders[index],
-            ),
-            separatorBuilder: (context, index) => const SizedBox(height: 16),
-          );
-        }),
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(errorMessage),
+                behavior: SnackBarBehavior.floating,
+              ));
+            },
+            builder: (context, state) {
+              final loading =
+                  state is ReminderInitial || state is ReminderLoading;
+
+              if (state.reminders.isEmpty) {
+                if (loading) {
+                  return _loading(context);
+                }
+
+                return _empty(context);
+              }
+
+              return ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                itemCount: state.reminders.length,
+                itemBuilder: (context, index) => _reminderItem(
+                  context,
+                  reminder: state.reminders.elementAt(index),
+                ),
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 16),
+              );
+            }),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final bool? value = await context.push('/reminder/add');
           if ((value ?? false) && context.mounted) {
-            _getUserReminder(context);
+            // _getUserReminder(context);
           }
         },
         tooltip: 'Tambah Pengingat',
@@ -102,10 +72,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
     );
   }
 
-  Widget _reminderItem(
-    BuildContext context, {
-    required ReminderModel reminder,
-  }) {
+  Widget _reminderItem(BuildContext context, {required Reminder reminder}) {
     final String reminderIcon =
         contextAssetMap[reminder.context] ?? 'assets/icon/meds.svg';
     final String reminderTitle = reminder.referenceName ?? 'Pengingat';
@@ -117,7 +84,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
       onPressed: () async {
         final bool? value = await context.push('/reminder/${reminder.id}');
         if ((value ?? false) && context.mounted) {
-          _getUserReminder(context);
+          // _getUserReminder(context);
         }
       },
       style: ElevatedButton.styleFrom(
@@ -131,10 +98,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                reminderTitle,
-                style: const TextStyle(fontSize: 20),
-              ),
+              Text(reminderTitle),
               const SizedBox(height: 2),
               Text(
                 reminderTimes,

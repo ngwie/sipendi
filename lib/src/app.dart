@@ -18,10 +18,11 @@ import 'medical_record/bloc/medical_record_bloc.dart';
 import 'medical_record/views/medical_record_detail.dart';
 import 'medical_record/views/medical_record_from.dart';
 import 'medical_record/views/medical_record_menu.dart';
+import 'patient_medicine/bloc/patient_medicine_bloc.dart';
+import 'reminder/bloc/reminder_bloc.dart';
 import 'reminder/views/reminder.dart';
 import 'reminder/views/reminder_add.dart';
 import 'reminder/views/reminder_edit.dart';
-
 import 'theme.dart';
 
 final _router = GoRouter(
@@ -136,6 +137,12 @@ class App extends StatelessWidget {
         ),
         BlocProvider<ConsultationBloc>(
           create: (BuildContext context) => ConsultationBloc(),
+        ),
+        BlocProvider(
+          create: (BuildContext context) => ReminderBloc(),
+        ),
+        BlocProvider(
+          create: (BuildContext context) => PatientMedicineBloc(),
         ),
       ],
       child: MaterialApp.router(

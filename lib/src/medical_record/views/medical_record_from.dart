@@ -39,7 +39,7 @@ class _MedicalRecordAddScreenState extends State<MedicalRecordAddScreen> {
       body: SingleChildScrollView(
         child: SafeArea(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 28.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Form(
               key: _formKey,
               child: Column(

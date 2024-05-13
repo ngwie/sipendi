@@ -6,8 +6,8 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../bloc/medical_record_bloc.dart';
 import '../models/medical_record.dart';
-import '../models/medical_record_type.dart';
 import '../models/medical_record_page_type.dart';
+import '../models/medical_record_type.dart';
 
 class MedicalRecordDetailScreen extends StatelessWidget {
   final String pageTypeName;
@@ -60,9 +60,9 @@ class MedicalRecordDetailScreen extends StatelessWidget {
                   medicalRecords: records,
                   loading: loading,
                 ),
-                const SizedBox(height: 18),
+                const SizedBox(height: 24),
                 _addRecord(context),
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
                 _chart(
                   context,
                   pageType: pageType,
@@ -127,7 +127,7 @@ class MedicalRecordDetailScreen extends StatelessWidget {
                       );
                     }).toList(),
             ),
-            const SizedBox(height: 44),
+            const SizedBox(height: 40),
             _lastRecordTime(
               context,
               time: medicalRecords.isNotEmpty
@@ -135,7 +135,7 @@ class MedicalRecordDetailScreen extends StatelessWidget {
                       .format(medicalRecords.first.createdAt)
                   : null,
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 16),
           ],
         ),
       ),
@@ -151,7 +151,7 @@ class MedicalRecordDetailScreen extends StatelessWidget {
     final isUnitInline = unit == '%';
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
           Text(
@@ -212,7 +212,7 @@ class MedicalRecordDetailScreen extends StatelessWidget {
 
   Widget _addRecord(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 28.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           minimumSize: const Size.fromHeight(50),
@@ -244,17 +244,13 @@ class MedicalRecordDetailScreen extends StatelessWidget {
     required List<MedicalRecord> medicalRecords,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 28.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Riwayat',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-              color: Theme.of(context).colorScheme.secondary,
-            ),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 8),
           SfCartesianChart(

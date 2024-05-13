@@ -15,7 +15,7 @@ class MedicalRecordMenuScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           children: [
             _menuItem(
               context,

@@ -38,12 +38,12 @@ class HomeScreen extends StatelessWidget {
               ],
             );
           }),
-          const SizedBox(width: 12)
+          const SizedBox(width: 8)
         ],
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           children: [
             _greetings(context),
             const SizedBox(height: 32),
