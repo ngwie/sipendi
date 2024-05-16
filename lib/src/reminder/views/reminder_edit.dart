@@ -5,49 +5,17 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../patient_medicine/bloc/patient_medicine_bloc.dart';
-import '../../utils/alarm_notification.dart';
-import '../../utils/sqlite_db.dart';
+import '../../patient_medicine/models/patient_medicine.dart';
+import '../../utils/string_med.dart';
 import '../../widgets/icon/alarm.dart';
 import '../bloc/reminder_bloc.dart';
 import '../models/reminder.dart';
-import '../models/reminder_model.dart';
 import '../models/reminder_time.dart';
 
-class ReminderEditScreen extends StatefulWidget {
+class ReminderEditScreen extends StatelessWidget {
   final String id;
 
   const ReminderEditScreen({super.key, required this.id});
-
-  @override
-  State<ReminderEditScreen> createState() => _ReminderEditScreenState();
-}
-
-class _ReminderEditScreenState extends State<ReminderEditScreen> {
-  Future<void> _removeReminder() async {
-    final reminderTimesHash = await SqliteDb.client.query(
-      'reminder_time',
-      where: 'reminder_id = ?',
-      whereArgs: [widget.id],
-    );
-
-    final reminderTimes = ReminderTimeModel.formHashList(reminderTimesHash);
-
-    for (var reminderTime in reminderTimes) {
-      await AlarmNotification.cancel(id: reminderTime.id);
-    }
-
-    await SqliteDb.client.delete(
-      'reminder_time',
-      where: 'reminder_id = ?',
-      whereArgs: [widget.id],
-    );
-
-    await SqliteDb.client.delete(
-      'reminder',
-      where: 'id = ?',
-      whereArgs: [widget.id],
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +54,8 @@ class _ReminderEditScreenState extends State<ReminderEditScreen> {
       builder: (context, state) {
         final reminderLoading =
             state is ReminderInitial || state is ReminderLoading;
-        final reminder = state.reminders.firstWhereOrNull(
-            (reminder) => reminder.id.toString() == widget.id);
+        final reminder = state.reminders
+            .firstWhereOrNull((reminder) => reminder.id.toString() == id);
 
         return _patientMedicineBlocConsumer(
           context,
@@ -122,12 +90,13 @@ class _ReminderEditScreenState extends State<ReminderEditScreen> {
         final patientMedicine = state.patientMedicines.firstWhereOrNull(
             (patientMedicine) => patientMedicine.id == reminder?.referenceId);
 
-        print(state.patientMedicines.length);
-
         return SingleChildScrollView(
           child: Column(
             children: [
-              _hero(context, loading: loading, reminder: reminder),
+              _hero(context,
+                  loading: loading,
+                  reminder: reminder,
+                  patientMedicine: patientMedicine),
               const SizedBox(height: 20),
               _reminderTimeList(context, reminder: reminder),
             ],
@@ -137,8 +106,12 @@ class _ReminderEditScreenState extends State<ReminderEditScreen> {
     );
   }
 
-  Widget _hero(BuildContext context,
-      {required bool loading, Reminder? reminder}) {
+  Widget _hero(
+    BuildContext context, {
+    required bool loading,
+    Reminder? reminder,
+    PatientMedicine? patientMedicine,
+  }) {
     return Container(
       padding: const EdgeInsets.only(left: 20, bottom: 20, right: 20),
       decoration: BoxDecoration(
@@ -179,14 +152,24 @@ class _ReminderEditScreenState extends State<ReminderEditScreen> {
                       ),
                     ),
                     Text(
-                      'Obat Setelah Makan',
+                      patientMedicine != null
+                          ? StringMed.consumptionRuleText(
+                              rule: patientMedicine.consumptionRule,
+                            )
+                          : '',
                       style: TextStyle(
                         fontSize: 20,
                         color: Theme.of(context).colorScheme.onSecondary,
                       ),
                     ),
+                    const SizedBox(height: 2),
                     Text(
-                      'Setiap hari, 2x Sehari',
+                      patientMedicine != null
+                          ? StringMed.doseFrequencyText(
+                              freq: patientMedicine.recurrenceFrequency,
+                              type: patientMedicine.recurrenceType,
+                            )
+                          : '',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
@@ -264,34 +247,44 @@ class _ReminderEditScreenState extends State<ReminderEditScreen> {
       onPressed: () => Navigator.pop(context),
     );
 
-    Widget confirmButton = TextButton(
-      child: const Text('Iya, Saya yakin'),
-      onPressed: () async {
-        try {
-          await _removeReminder();
+    Widget confirmButton = BlocConsumer<ReminderBloc, ReminderState>(
+      listenWhen: (previous, current) => previous is ReminderLoading,
+      listener: (context, state) {
+        Navigator.pop(context);
 
-          if (context.mounted) {
-            Navigator.pop(context);
-            context.pop(true);
-          }
-        } catch (error) {
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('Gagal menghapus pengingat'),
-              behavior: SnackBarBehavior.floating,
-            ));
-          }
+        if (state is ReminderSuccess) {
+          context.pop();
         }
+
+        if (state is ReminderError) {
+          final errorMessage =
+              state.error != '' ? state.error : 'Gagal menghapus pengingat';
+
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(errorMessage),
+            behavior: SnackBarBehavior.floating,
+          ));
+        }
+      },
+      builder: (context, state) {
+        final loading = state is ReminderLoading;
+
+        return TextButton(
+          child: const Text('Iya, Saya yakin'),
+          onPressed: () {
+            if (loading) return;
+
+            final removeRemainder = ReminderRemoved(id: int.parse(id));
+            context.read<ReminderBloc>().add(removeRemainder);
+          },
+        );
       },
     );
 
     AlertDialog removeConfirmationAlert = AlertDialog(
       title: const Text('Hapus Pengingat'),
       content: const Text('Apakah anda yakin ingin menghapus pengingat'),
-      actions: [
-        cancelButton,
-        confirmButton,
-      ],
+      actions: [cancelButton, confirmButton],
     );
 
     showDialog(

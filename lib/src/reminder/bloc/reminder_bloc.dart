@@ -28,6 +28,8 @@ class ReminderBloc extends Bloc<ReminderEvent, ReminderState> {
 
     on<ReminderAdded>((event, emit) async {
       try {
+        emit(ReminderLoading(reminders: state.reminders));
+
         final reminder = await _insertReminder(
           event.reminderContext,
           event.referenceId,
@@ -36,6 +38,8 @@ class ReminderBloc extends Bloc<ReminderEvent, ReminderState> {
         );
 
         await _setAlarm(reminder);
+
+        emit(ReminderSuccess(reminders: {...state.reminders, reminder}));
       } catch (error) {
         emit(ReminderError(
           error: error.toString(),
@@ -46,10 +50,16 @@ class ReminderBloc extends Bloc<ReminderEvent, ReminderState> {
 
     on<ReminderRemoved>((event, emit) async {
       try {
+        emit(ReminderLoading(reminders: state.reminders));
+
         final reminder = await _getReminder(event.id);
 
         await _cancelAlarm(reminder);
         await _deleteReminder(event.id);
+
+        state.reminders.remove(reminder);
+
+        emit(ReminderSuccess(reminders: state.reminders));
       } catch (error) {
         emit(ReminderError(
           error: error.toString(),
