@@ -56,6 +56,8 @@ class AlarmNotification {
       android: androidNotificationDetails,
     );
 
+    await _notification.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
+
     await _notification.zonedSchedule(
       id,
       title,
