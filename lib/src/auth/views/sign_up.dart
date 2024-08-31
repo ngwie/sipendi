@@ -105,7 +105,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               labelText: 'Kata Sandi',
             ),
             validator: (value) => StringValidation.isEmpty(value)
-                ? 'Password tidak boleh kosong'
+                ? 'Kata sandi tidak boleh kosong'
                 : null,
           ),
           const SizedBox(height: 16),

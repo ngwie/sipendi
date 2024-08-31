@@ -69,4 +69,22 @@ class UserAuthModel extends ChangeNotifier {
 
     await _assignUserDetail(data: data);
   }
+
+  Future<void> requestOtp({required String phone}) async {
+    await _supabase.auth.signInWithOtp(phone: phone);
+  }
+
+  Future<void> verifyOtp({required String phone, required String token}) async {
+    await _supabase.auth.verifyOTP(
+      type: OtpType.sms,
+      token: token,
+      phone: phone,
+    );
+
+    await _assignUserDetail();
+  }
+
+  Future<void> resetPassword({required String password}) async {
+    await _supabase.auth.updateUser(UserAttributes(password: password));
+  }
 }

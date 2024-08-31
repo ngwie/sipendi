@@ -90,7 +90,10 @@ class _SignInScreenState extends State<SignInScreen> {
                 ? 'Password tidak boleh kosong'
                 : null,
           ),
-          const SizedBox(height: 16),
+          TextButton(
+            child: const Text('Lupa sandi?'),
+            onPressed: () => context.push('/reset-password'),
+          ),
           Consumer<UserAuthModel>(
             builder: (context, model, child) {
               return ElevatedButton(

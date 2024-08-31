@@ -9,6 +9,9 @@ import 'package:sipendi/src/screens/medicine_detail.dart';
 import 'auth/models/user_auth.dart';
 import 'auth/views/sign_in.dart';
 import 'auth/views/sign_up.dart';
+import 'auth/views/reset_password.dart';
+import 'auth/views/verify_otp.dart';
+import 'auth/views/change_password.dart';
 import 'config/cubit/config_cubit.dart';
 import 'consultation/bloc/consultation_bloc.dart';
 import 'consultation/views/consultation.dart';
@@ -27,7 +30,12 @@ import 'theme.dart';
 
 final _router = GoRouter(
   redirect: (context, state) {
-    const unprotectedPath = ['/login', '/register'];
+    const unprotectedPath = [
+      '/login',
+      '/register',
+      '/reset-password',
+      '/reset-password/verify-otp',
+    ];
 
     final signedIn =
         Provider.of<UserAuthModel>(context, listen: false).signedIn;
@@ -117,6 +125,21 @@ final _router = GoRouter(
     GoRoute(
       path: '/register',
       builder: (context, state) => const SignUpScreen(),
+    ),
+    GoRoute(
+      path: '/reset-password',
+      builder: (context, state) => const ResetPasswordScreen(),
+      routes: [
+        GoRoute(
+          path: 'verify-otp',
+          builder: (context, state) =>
+              VerifyOtpScreen(phone: state.extra! as String),
+        ),
+        GoRoute(
+          path: 'change-password',
+          builder: (context, state) => const ChangePasswordScreen(),
+        ),
+      ],
     ),
   ],
 );
